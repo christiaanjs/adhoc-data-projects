@@ -128,6 +128,50 @@ def treatment_benefit(patient: Patient, n_draws: int = N_DRAWS, seed: int = 0):
     )
 
 
+UNIFIED_NPZ = os.path.join(OUT, "unified_posterior.npz")
+# Predictor order in the unified model (age is per-decade, centred at 40).
+UNIFIED_PRED_ORDER = ["age", "female", "smoking", "complete_displacement",
+                      "comminution", "shortening_gt2cm"]
+
+
+def treatment_benefit_unified(patient: Patient):
+    """Per-patient risk/ARR/NNT read straight off the single joint posterior.
+
+    Uses outputs/unified_posterior.npz (from src/unified_model.py): baseline,
+    treatment effect and predictor slopes all come from ONE fit, so no
+    independent-source pairing is needed - every draw is internally consistent.
+    """
+    if not os.path.exists(UNIFIED_NPZ):
+        raise FileNotFoundError(
+            f"{UNIFIED_NPZ} not found - run `python run_all.py` first.")
+    d = np.load(UNIFIED_NPZ, allow_pickle=True)
+    gamma = d["gamma"]                              # (n_draws, K)
+    base_ref = d["base_ref"]                        # (n_draws, 2)
+    mu_delta = d["mu_delta"]                        # (n_draws, 2)
+    loc_levels = list(d["loc_levels"])
+    li = loc_levels.index("distal" if patient.location == "distal" else "midshaft")
+
+    x = np.array([
+        (patient.age - 40) / 10.0, float(patient.female), float(patient.smoking),
+        float(patient.complete_displacement), float(patient.comminution),
+        float(patient.shortening_gt2cm)])
+    lin_no = base_ref[:, li] + gamma @ x
+    lin_op = lin_no + mu_delta[:, li]
+    risk_nonop = 1.0 / (1.0 + np.exp(-lin_no))
+    risk_op = 1.0 / (1.0 + np.exp(-lin_op))
+    arr = risk_nonop - risk_op
+    with np.errstate(divide="ignore"):
+        nnt = np.where(arr > 1e-9, 1.0 / arr, np.inf)
+    return dict(
+        patient=asdict(patient),
+        risk_nonoperative=_summ(risk_nonop),
+        risk_operative=_summ(risk_op),
+        absolute_risk_reduction=_summ(arr),
+        relative_risk=_summ(np.exp(mu_delta[:, li])),   # OR (approx RR at low risk)
+        nnt=_summ(nnt[np.isfinite(nnt)]),
+    )
+
+
 def benefit_band(nnt_median: float) -> str:
     """Illustrative (NOT prescriptive) interpretation of the NNT."""
     if nnt_median <= 5:

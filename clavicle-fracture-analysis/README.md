@@ -15,8 +15,12 @@ published literature. It has three parts:
    and fracture factors (smoking, displacement, shortening, comminution, sex,
    age), delivered as a logistic regression, a bedside **points score**, and a
    decision tree, then compared on discrimination and calibration.
-4. **Individualised treatment benefit** — combines the baseline risk (part 3)
-   with the meta-analytic relative effect (parts 1–2) to give a per-patient
+4. **Unified single-fit model** — one Bayesian model fit directly to all the
+   published trial **counts** (each arm as a binomial), with the published
+   predictor odds ratios folded in as an evidence block, so baseline risk,
+   treatment effect and patient-factor slopes come from a single joint posterior
+   (no normal approximation, no continuity corrections).
+5. **Individualised treatment benefit** — turns the above into a per-patient
    absolute risk reduction and number-needed-to-treat, with credible intervals,
    exposed through a command-line predictor (`predict.py`).
 
@@ -51,8 +55,9 @@ clavicle-fracture-analysis/
 ├── src/
 │   ├── meta_analysis.py             # DerSimonian–Laird RE meta-analysis + forest plot
 │   ├── hierarchical_meta.py         # PyMC/NUTS 3-level Bayesian meta-analysis
+│   ├── unified_model.py             # PyMC/NUTS single joint fit to arm counts + ORs
 │   ├── risk_model.py                # points score, logistic regression, tree, calculator
-│   └── treatment_benefit.py         # baseline risk x meta-analytic RR -> ARR/NNT
+│   └── treatment_benefit.py         # baseline risk x treatment effect -> ARR/NNT
 ├── outputs/                         # generated figures, tables, text reports
 ├── report/REPORT.md                 # auto-generated report
 ├── run_all.py                       # runs everything and regenerates the report
@@ -82,8 +87,13 @@ interval), plus the interpretable points score.
 python predict.py --age 28
 python predict.py --age 62 --female --smoking --displacement --comminution --shortening
 python predict.py --age 55 --displacement --location distal
-python predict.py --age 40 --smoking --displacement --json   # machine-readable
+python predict.py --age 40 --smoking --displacement --json          # machine-readable
+python predict.py --age 40 --smoking --displacement --model two-stage  # cross-check
 ```
+
+By default it uses the **unified single-fit model** (`src/unified_model.py`); the
+`--model two-stage` flag instead combines the separate risk model and
+meta-analysis posteriors as a cross-check.
 
 Example output:
 

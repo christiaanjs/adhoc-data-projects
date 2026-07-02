@@ -192,36 +192,84 @@ benefit of surgery is concentrated.
 
 ---
 
+## Part 3b — A single model fit to all the published counts
+
+Parts 1–3 use the data in two stages: a meta-analysis for the *effect* and a
+separate model for *baseline risk*. This part does it in **one Bayesian fit**.
+Each trial arm's nonunion count is modelled directly as **binomial**, so there
+is no log-RR normal approximation and no continuity correction for the zero-event
+arms; the published multivariable odds ratios enter the same model as an
+evidence block. Baseline risk (by location), the treatment effect, and the
+patient-factor slopes therefore all come out of **one joint posterior** with
+coherent uncertainty. Fitted with PyMC/NUTS
+(**0 divergences, max R-hat = 1.000**).
+
+![Unified treatment effect](../outputs/unified_treatment_effect.png)
+
+| Quantity | Estimate |
+|---|---|
+| Treatment effect, overall (OR) | **0.10** (0.04–0.47) |
+| Treatment effect, midshaft (OR) | 0.09 (0.04–0.20) |
+| Treatment effect, distal (OR) | 0.10 (0.04–0.24) |
+| Reference-patient baseline nonunion, midshaft | 5.6% (3.4–9.4%) |
+| Reference-patient baseline nonunion, distal | 10.5% (5.8–18.1%) |
+
+The binomial treatment OR (0.10) agrees with the earlier
+normal-approximation meta-analysis (OR ≈ 0.12) but is slightly stronger, because
+the exact binomial likelihood does not need to pull the zero-event arms toward
+the null with a continuity correction. The predictor slopes are recovered from
+the evidence block (posterior vs published OR):
+
+| predictor             |   OR_posterior |   OR_lo |   OR_hi |   OR_published |
+|:----------------------|---------------:|--------:|--------:|---------------:|
+| age                   |           1.2  |    1.04 |    1.39 |           1.2  |
+| female                |           1.52 |    0.97 |    2.25 |           1.5  |
+| smoking               |           3.79 |    1.73 |    7.24 |           3.76 |
+| complete_displacement |           2.31 |    1.36 |    3.73 |           2.3  |
+| comminution           |           1.77 |    1.04 |    2.83 |           1.75 |
+| shortening_gt2cm      |           2.03 |    1.18 |    3.29 |           2    |
+
+**Why this is the preferred model for prediction:** the individualised
+calculator (Part 4) reads baseline, effect and predictor slopes off this *single*
+posterior, so uncertainty is propagated consistently rather than by combining
+two independent fits. It is the default used by `predict.py`. Implemented in
+[`src/unified_model.py`](../src/unified_model.py).
+
+*(Note: aggregate arm counts cannot by themselves identify the patient-factor
+slopes — those are pinned by the published-OR evidence block. The gain is a
+single coherent fit that uses the counts as counts, not a normal approximation.)*
+
+---
+
 ## Part 4 — Putting it together: individualised benefit of surgery
 
-Parts 1–2 give a *population* relative effect; Part 3 gives an *individual*
-baseline risk. Multiplying them gives the number a patient actually cares about —
-their **absolute** risk reduction and number-needed-to-treat from surgery:
+The quantity a patient actually cares about is their **absolute** risk reduction
+and number-needed-to-treat from surgery:
 
 ```
-risk_nonop = baseline model (Part 3)
-risk_op    = risk_nonop x RR            (RR from the meta-analysis posterior, Part 2)
-ARR        = risk_nonop - risk_op ;   NNT = 1 / ARR
+logit risk_nonop = base_ref[location] + sum_k gamma_k * x_k
+logit risk_op    = logit risk_nonop + treatment_effect[location]
+ARR = risk_nonop - risk_op ;   NNT = 1 / ARR
 ```
 
-Uncertainty from **both** the baseline model (logistic coefficient covariance)
-and the meta-analytic effect (RR posterior draws) is propagated by Monte Carlo,
-so every number carries a 95% credible interval. Distal fractures use the distal
-RR posterior and a higher baseline rate.
+By default these are read straight off the **single joint posterior** from
+Part 3b, so baseline, treatment effect and predictor slopes are mutually
+consistent and all uncertainty is propagated together (every number carries a
+95% credible interval). (`predict.py --model two-stage` instead combines the
+separate risk model and meta-analysis posterior — a useful cross-check.)
 
 | patient                                       | nonop risk   | op risk   | ARR   | NNT (95% CrI)   | interpretation                    |
 |:----------------------------------------------|:-------------|:----------|:------|:----------------|:----------------------------------|
-| Young, minimally displaced (midshaft)         | 3%           | 0%        | 3%    | 38 (30-50)      | small absolute benefit (high NNT) |
-| Typical displaced midshaft                    | 8%           | 1%        | 7%    | 14 (12-18)      | moderate absolute benefit         |
-| Older smoker, comminuted+shortened (midshaft) | 68%          | 9%        | 58%   | 2 (2-2)         | large absolute benefit (low NNT)  |
-| Displaced distal (Neer II)                    | 25%          | 4%        | 21%   | 5 (4-6)         | large absolute benefit (low NNT)  |
+| Young, minimally displaced (midshaft)         | 4%           | 0%        | 4%    | 26 (15-45)      | small absolute benefit (high NNT) |
+| Typical displaced midshaft                    | 12%          | 1%        | 11%   | 10 (6-16)       | moderate absolute benefit         |
+| Older smoker, comminuted+shortened (midshaft) | 78%          | 25%       | 51%   | 2 (2-3)         | large absolute benefit (low NNT)  |
+| Displaced distal (Neer II)                    | 26%          | 3%        | 22%   | 5 (3-8)         | large absolute benefit (low NNT)  |
 
-The relative effect of surgery is nearly constant (~7-fold risk reduction), but
-the **absolute** benefit ranges from trivial (NNT ≈ 36 for a young minimally
-displaced fracture — surgery hard to justify) to decisive (NNT ≈ 2 for a
-high-risk midshaft, NNT ≈ 5 for a displaced distal fracture). This is the
-clinical payoff of combining the three analyses, and it is exactly what the
-command-line tool exposes:
+The relative effect of surgery is nearly constant, but the **absolute** benefit
+ranges from trivial (high NNT for a young minimally displaced fracture — surgery
+hard to justify) to decisive (NNT ≈ 2 for a high-risk midshaft, low single
+digits for a displaced distal fracture). This is the clinical payoff of the whole
+analysis, and it is exactly what the command-line tool exposes:
 
 ```bash
 python predict.py --age 62 --female --smoking --displacement --comminution --shortening
@@ -229,8 +277,8 @@ python predict.py --age 55 --displacement --location distal
 python predict.py --age 40 --smoking --displacement --json   # machine-readable
 ```
 
-Implemented in [`src/treatment_benefit.py`](../src/treatment_benefit.py) and
-[`predict.py`](../predict.py).
+Implemented in [`src/treatment_benefit.py`](../src/treatment_benefit.py) (both
+the unified and two-stage paths) and [`predict.py`](../predict.py).
 
 ---
 
