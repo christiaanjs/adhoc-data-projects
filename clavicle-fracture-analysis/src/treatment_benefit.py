@@ -129,25 +129,24 @@ def treatment_benefit(patient: Patient, n_draws: int = N_DRAWS, seed: int = 0):
 
 
 UNIFIED_NPZ = os.path.join(OUT, "unified_posterior.npz")
-# Predictor order in the unified model (age is per-decade, centred at 40).
-UNIFIED_PRED_ORDER = ["age", "female", "smoking", "complete_displacement",
-                      "comminution", "shortening_gt2cm"]
+LATENT_NPZ = os.path.join(OUT, "latent_posterior.npz")
+# Predictor order in the joint models (age is per-decade, centred at 40).
+JOINT_PRED_ORDER = ["age", "female", "smoking", "complete_displacement",
+                    "comminution", "shortening_gt2cm"]
 
 
-def treatment_benefit_unified(patient: Patient):
-    """Per-patient risk/ARR/NNT read straight off the single joint posterior.
+def _benefit_from_joint_posterior(patient: Patient, npz_path: str):
+    """Per-patient risk/ARR/NNT read straight off a single joint posterior.
 
-    Uses outputs/unified_posterior.npz (from src/unified_model.py): baseline,
-    treatment effect and predictor slopes all come from ONE fit, so no
-    independent-source pairing is needed - every draw is internally consistent.
+    The npz holds gamma (n,K), base_ref (n,2) and mu_delta (n,2): baseline,
+    treatment effect and predictor slopes all from ONE fit, so every draw is
+    internally consistent (no independent-source pairing needed).
     """
-    if not os.path.exists(UNIFIED_NPZ):
+    if not os.path.exists(npz_path):
         raise FileNotFoundError(
-            f"{UNIFIED_NPZ} not found - run `python run_all.py` first.")
-    d = np.load(UNIFIED_NPZ, allow_pickle=True)
-    gamma = d["gamma"]                              # (n_draws, K)
-    base_ref = d["base_ref"]                        # (n_draws, 2)
-    mu_delta = d["mu_delta"]                        # (n_draws, 2)
+            f"{npz_path} not found - run `python run_all.py` first.")
+    d = np.load(npz_path, allow_pickle=True)
+    gamma, base_ref, mu_delta = d["gamma"], d["base_ref"], d["mu_delta"]
     loc_levels = list(d["loc_levels"])
     li = loc_levels.index("distal" if patient.location == "distal" else "midshaft")
 
@@ -170,6 +169,16 @@ def treatment_benefit_unified(patient: Patient):
         relative_risk=_summ(np.exp(mu_delta[:, li])),   # OR (approx RR at low risk)
         nnt=_summ(nnt[np.isfinite(nnt)]),
     )
+
+
+def treatment_benefit_unified(patient: Patient):
+    """Individualised benefit from the linear-offset unified model."""
+    return _benefit_from_joint_posterior(patient, UNIFIED_NPZ)
+
+
+def treatment_benefit_latent(patient: Patient):
+    """Individualised benefit from the exact latent-marginalisation model."""
+    return _benefit_from_joint_posterior(patient, LATENT_NPZ)
 
 
 def benefit_band(nnt_median: float) -> str:

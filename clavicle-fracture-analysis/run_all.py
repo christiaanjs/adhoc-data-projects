@@ -18,6 +18,7 @@ import meta_analysis
 import risk_model
 import hierarchical_meta
 import unified_model
+import latent_integration_model
 import treatment_benefit
 from treatment_benefit import Patient, benefit_band
 
@@ -43,6 +44,9 @@ def main():
     print("\n########## 3b. UNIFIED SINGLE-FIT MODEL (counts + predictor ORs) ##########\n")
     um = unified_model.run()
 
+    print("\n########## 3c. LATENT-COVARIATE MODEL (exact marginalisation) ##########\n")
+    lm = latent_integration_model.run()
+
     print("\n########## 4. INDIVIDUALISED TREATMENT BENEFIT ##########\n")
     bench_patients = [
         ("Young, minimally displaced (midshaft)", Patient(age=25)),
@@ -55,7 +59,7 @@ def main():
     ]
     brows = []
     for label, p in bench_patients:
-        r = treatment_benefit.treatment_benefit_unified(p)
+        r = treatment_benefit.treatment_benefit_latent(p)
         brows.append((
             label,
             f"{r['risk_nonoperative']['median']*100:.0f}%",
@@ -92,6 +96,10 @@ def main():
     us = um["summary"].set_index("location")
     u_or_med, u_or_lo, u_or_hi = um["OR_overall"]
     u_gamma = um["gamma"]
+
+    # Latent-covariate model summary for the report.
+    ls = lm["summary"].set_index("location")
+    l_prev = lm["prevalences"]
 
     md = f"""# Clavicle fracture outcomes: meta-analysis and interpretable risk model
 
@@ -294,15 +302,62 @@ the evidence block (posterior vs published OR):
 
 {fmt_table(u_gamma[['predictor','OR_posterior','OR_lo','OR_hi','OR_published']], 2)}
 
-**Why this is the preferred model for prediction:** the individualised
-calculator (Part 4) reads baseline, effect and predictor slopes off this *single*
-posterior, so uncertainty is propagated consistently rather than by combining
-two independent fits. It is the default used by `predict.py`. Implemented in
+**Why a single fit helps:** the individualised calculator (Part 4) reads
+baseline, effect and predictor slopes off *one* posterior, so uncertainty is
+propagated consistently rather than by combining independent fits. Part 3c
+refines this fit further. Implemented in
 [`src/unified_model.py`](../src/unified_model.py).
 
 *(Note: aggregate arm counts cannot by themselves identify the patient-factor
 slopes — those are pinned by the published-OR evidence block. The gain is a
 single coherent fit that uses the counts as counts, not a normal approximation.)*
+
+---
+
+## Part 3c — Integrating the risk factors out as latent variables
+
+The unified model maps the reference-patient baseline to the trial population
+rate with a **linear** offset. That is only a first-order approximation: because
+risk is a *nonlinear* (sigmoid) function of the covariates, the average of
+`sigmoid(risk)` over a heterogeneous population is **not** `sigmoid(average
+risk)` (Jensen's inequality). This model fixes that by treating each patient's
+risk factors as **latent** and integrating them out of the aggregate counts
+exactly — enumerating all 2⁵ binary risk-factor profiles (weighted by their
+prevalences) and Gauss–Hermite quadrature over the age distribution. The
+published **prevalences** and **odds ratios** both enter as data blocks:
+
+```
+p_arm = E_x[ sigmoid( base_ref[loc] + treat + gamma·x ) ]     # exact expectation
+counts      : y_arm ~ Binomial(n_arm, p_arm)
+prevalences : published prevalence ~ Binomial(N_eff, prev_k)
+odds ratios : published logOR_k    ~ Normal(gamma_k, se_k)
+```
+
+Deterministic quadrature is used rather than sampling ages: for a smooth 1-D
+integral, ~8 quadrature nodes are exact, whereas Monte-Carlo draws would inject
+noise into the log-density and degrade NUTS. Clean sampling
+(**{int(lm['diverging'])} divergences, max R-hat = {lm['max_rhat']:.3f}**).
+
+| Quantity | Linear-offset (3b) | **Latent-marginalised (3c)** |
+|---|---|---|
+| Treatment OR, midshaft | {us.loc['midshaft','OR_treat']:.2f} | {ls.loc['midshaft','OR_treat']:.2f} ({ls.loc['midshaft','OR_lo']:.2f}–{ls.loc['midshaft','OR_hi']:.2f}) |
+| Treatment OR, distal | {us.loc['distal','OR_treat']:.2f} | {ls.loc['distal','OR_treat']:.2f} ({ls.loc['distal','OR_lo']:.2f}–{ls.loc['distal','OR_hi']:.2f}) |
+| Reference-patient baseline, midshaft | {us.loc['midshaft','base_risk_ref']*100:.1f}% | **{ls.loc['midshaft','base_risk_ref']*100:.1f}%** ({ls.loc['midshaft','base_lo']*100:.1f}–{ls.loc['midshaft','base_hi']*100:.1f}%) |
+| Reference-patient baseline, distal | {us.loc['distal','base_risk_ref']*100:.1f}% | **{ls.loc['distal','base_risk_ref']*100:.1f}%** ({ls.loc['distal','base_lo']*100:.1f}–{ls.loc['distal','base_hi']*100:.1f}%) |
+
+The exact marginalisation pulls the **reference-patient baseline down** relative
+to the linear offset (midshaft {us.loc['midshaft','base_risk_ref']*100:.1f}% →
+{ls.loc['midshaft','base_risk_ref']*100:.1f}%): high-risk patients contribute
+disproportionately to the aggregate nonunion count, so attributing the whole
+population rate to an "average" linear shift overstates the low-risk reference
+patient's baseline. This is the Jensen correction in action. The latent
+prevalences are recovered from the data with proper uncertainty:
+
+{fmt_table(l_prev[['factor','prev_posterior','prev_lo','prev_hi','prev_published']], 2)}
+
+This is the most principled of the joint models and is the **default** used by
+`predict.py`. Implemented in
+[`src/latent_integration_model.py`](../src/latent_integration_model.py).
 
 ---
 
@@ -317,11 +372,11 @@ logit risk_op    = logit risk_nonop + treatment_effect[location]
 ARR = risk_nonop - risk_op ;   NNT = 1 / ARR
 ```
 
-By default these are read straight off the **single joint posterior** from
-Part 3b, so baseline, treatment effect and predictor slopes are mutually
+By default these are read straight off the **latent-covariate joint posterior**
+from Part 3c, so baseline, treatment effect and predictor slopes are mutually
 consistent and all uncertainty is propagated together (every number carries a
-95% credible interval). (`predict.py --model two-stage` instead combines the
-separate risk model and meta-analysis posterior — a useful cross-check.)
+95% credible interval). (`predict.py --model unified` or `--model two-stage`
+give cross-checks.)
 
 {fmt_table(bench_df, 1)}
 

@@ -29,7 +29,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src
 
 import pandas as pd  # noqa: E402
 from treatment_benefit import (Patient, treatment_benefit,  # noqa: E402
-                               treatment_benefit_unified, benefit_band)
+                               treatment_benefit_unified,
+                               treatment_benefit_latent, benefit_band)
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 POINTS_CSV = os.path.join(ROOT, "outputs", "points_table.csv")
@@ -50,10 +51,11 @@ def parse_args(argv=None):
                    help="shortening > 2 cm")
     p.add_argument("--location", choices=["midshaft", "distal"],
                    default="midshaft", help="fracture location")
-    p.add_argument("--model", choices=["unified", "two-stage"],
-                   default="unified",
-                   help="unified single-fit joint model, or the two-stage "
-                        "(separate risk model x meta-analysis) combination")
+    p.add_argument("--model", choices=["latent", "unified", "two-stage"],
+                   default="latent",
+                   help="latent = exact covariate-marginalisation joint fit "
+                        "(default); unified = linear-offset joint fit; "
+                        "two-stage = separate risk model x meta-analysis")
     p.add_argument("--json", action="store_true",
                    help="emit machine-readable JSON instead of a report")
     p.add_argument("--seed", type=int, default=0, help="Monte-Carlo seed")
@@ -88,7 +90,9 @@ def main(argv=None):
         shortening_gt2cm=int(args.shortening), location=args.location)
 
     try:
-        if args.model == "unified":
+        if args.model == "latent":
+            res = treatment_benefit_latent(patient)
+        elif args.model == "unified":
             res = treatment_benefit_unified(patient)
         else:
             res = treatment_benefit(patient, seed=args.seed)
@@ -123,7 +127,7 @@ def main(argv=None):
     print("-" * 64)
     print(f" Nonunion risk if treated NONoperatively : {pct(res['risk_nonoperative'])}")
     print(f" Nonunion risk if treated operatively    : {pct(res['risk_operative'])}")
-    eff = "odds ratio" if args.model == "unified" else "risk ratio"
+    eff = "risk ratio" if args.model == "two-stage" else "odds ratio"
     print(f" Relative effect of surgery ({eff:<10}) : "
           f"{res['relative_risk']['median']:.2f}  "
           f"(95% CrI {res['relative_risk']['lo']:.2f}-{res['relative_risk']['hi']:.2f})")

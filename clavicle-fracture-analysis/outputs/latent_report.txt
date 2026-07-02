@@ -1,0 +1,10 @@
+=== Latent-covariate single-fit model (exact marginalisation) ===
+Counts + published prevalences + published ORs; 4 chains; divergences=0; max R-hat=1.000
+  midshaft  treatment OR 0.08 [0.03, 0.17]   reference-patient baseline 4.5% [2.4, 8.1]
+  distal    treatment OR 0.08 [0.03, 0.20]   reference-patient baseline 9.5% [4.7, 17.3]
+Latent prevalences (posterior vs published):
+  female                 30% [23, 38]  (pub 30%)
+  smoking                26% [19, 33]  (pub 25%)
+  complete_displacement  55% [47, 62]  (pub 55%)
+  comminution            35% [27, 43]  (pub 35%)
+  shortening_gt2cm       30% [23, 38]  (pub 30%)

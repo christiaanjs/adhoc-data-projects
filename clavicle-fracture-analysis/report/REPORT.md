@@ -229,15 +229,68 @@ the evidence block (posterior vs published OR):
 | comminution           |           1.77 |    1.04 |    2.83 |           1.75 |
 | shortening_gt2cm      |           2.03 |    1.18 |    3.29 |           2    |
 
-**Why this is the preferred model for prediction:** the individualised
-calculator (Part 4) reads baseline, effect and predictor slopes off this *single*
-posterior, so uncertainty is propagated consistently rather than by combining
-two independent fits. It is the default used by `predict.py`. Implemented in
+**Why a single fit helps:** the individualised calculator (Part 4) reads
+baseline, effect and predictor slopes off *one* posterior, so uncertainty is
+propagated consistently rather than by combining independent fits. Part 3c
+refines this fit further. Implemented in
 [`src/unified_model.py`](../src/unified_model.py).
 
 *(Note: aggregate arm counts cannot by themselves identify the patient-factor
 slopes — those are pinned by the published-OR evidence block. The gain is a
 single coherent fit that uses the counts as counts, not a normal approximation.)*
+
+---
+
+## Part 3c — Integrating the risk factors out as latent variables
+
+The unified model maps the reference-patient baseline to the trial population
+rate with a **linear** offset. That is only a first-order approximation: because
+risk is a *nonlinear* (sigmoid) function of the covariates, the average of
+`sigmoid(risk)` over a heterogeneous population is **not** `sigmoid(average
+risk)` (Jensen's inequality). This model fixes that by treating each patient's
+risk factors as **latent** and integrating them out of the aggregate counts
+exactly — enumerating all 2⁵ binary risk-factor profiles (weighted by their
+prevalences) and Gauss–Hermite quadrature over the age distribution. The
+published **prevalences** and **odds ratios** both enter as data blocks:
+
+```
+p_arm = E_x[ sigmoid( base_ref[loc] + treat + gamma·x ) ]     # exact expectation
+counts      : y_arm ~ Binomial(n_arm, p_arm)
+prevalences : published prevalence ~ Binomial(N_eff, prev_k)
+odds ratios : published logOR_k    ~ Normal(gamma_k, se_k)
+```
+
+Deterministic quadrature is used rather than sampling ages: for a smooth 1-D
+integral, ~8 quadrature nodes are exact, whereas Monte-Carlo draws would inject
+noise into the log-density and degrade NUTS. Clean sampling
+(**0 divergences, max R-hat = 1.000**).
+
+| Quantity | Linear-offset (3b) | **Latent-marginalised (3c)** |
+|---|---|---|
+| Treatment OR, midshaft | 0.09 | 0.08 (0.03–0.17) |
+| Treatment OR, distal | 0.10 | 0.08 (0.03–0.20) |
+| Reference-patient baseline, midshaft | 5.6% | **4.5%** (2.4–8.1%) |
+| Reference-patient baseline, distal | 10.5% | **9.5%** (4.7–17.3%) |
+
+The exact marginalisation pulls the **reference-patient baseline down** relative
+to the linear offset (midshaft 5.6% →
+4.5%): high-risk patients contribute
+disproportionately to the aggregate nonunion count, so attributing the whole
+population rate to an "average" linear shift overstates the low-risk reference
+patient's baseline. This is the Jensen correction in action. The latent
+prevalences are recovered from the data with proper uncertainty:
+
+| factor                |   prev_posterior |   prev_lo |   prev_hi |   prev_published |
+|:----------------------|-----------------:|----------:|----------:|-----------------:|
+| female                |             0.3  |      0.23 |      0.38 |             0.3  |
+| smoking               |             0.26 |      0.19 |      0.33 |             0.25 |
+| complete_displacement |             0.55 |      0.47 |      0.62 |             0.55 |
+| comminution           |             0.35 |      0.27 |      0.43 |             0.35 |
+| shortening_gt2cm      |             0.3  |      0.23 |      0.38 |             0.3  |
+
+This is the most principled of the joint models and is the **default** used by
+`predict.py`. Implemented in
+[`src/latent_integration_model.py`](../src/latent_integration_model.py).
 
 ---
 
@@ -252,18 +305,18 @@ logit risk_op    = logit risk_nonop + treatment_effect[location]
 ARR = risk_nonop - risk_op ;   NNT = 1 / ARR
 ```
 
-By default these are read straight off the **single joint posterior** from
-Part 3b, so baseline, treatment effect and predictor slopes are mutually
+By default these are read straight off the **latent-covariate joint posterior**
+from Part 3c, so baseline, treatment effect and predictor slopes are mutually
 consistent and all uncertainty is propagated together (every number carries a
-95% credible interval). (`predict.py --model two-stage` instead combines the
-separate risk model and meta-analysis posterior — a useful cross-check.)
+95% credible interval). (`predict.py --model unified` or `--model two-stage`
+give cross-checks.)
 
 | patient                                       | nonop risk   | op risk   | ARR   | NNT (95% CrI)   | interpretation                    |
 |:----------------------------------------------|:-------------|:----------|:------|:----------------|:----------------------------------|
-| Young, minimally displaced (midshaft)         | 4%           | 0%        | 4%    | 26 (15-45)      | small absolute benefit (high NNT) |
-| Typical displaced midshaft                    | 12%          | 1%        | 11%   | 10 (6-16)       | moderate absolute benefit         |
-| Older smoker, comminuted+shortened (midshaft) | 78%          | 25%       | 51%   | 2 (2-3)         | large absolute benefit (low NNT)  |
-| Displaced distal (Neer II)                    | 26%          | 3%        | 22%   | 5 (3-8)         | large absolute benefit (low NNT)  |
+| Young, minimally displaced (midshaft)         | 3%           | 0%        | 3%    | 32 (17-62)      | small absolute benefit (high NNT) |
+| Typical displaced midshaft                    | 10%          | 1%        | 9%    | 12 (7-21)       | moderate absolute benefit         |
+| Older smoker, comminuted+shortened (midshaft) | 73%          | 18%       | 54%   | 2 (1-3)         | large absolute benefit (low NNT)  |
+| Displaced distal (Neer II)                    | 23%          | 2%        | 21%   | 5 (3-9)         | large absolute benefit (low NNT)  |
 
 The relative effect of surgery is nearly constant, but the **absolute** benefit
 ranges from trivial (high NNT for a young minimally displaced fracture — surgery

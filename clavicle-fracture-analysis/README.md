@@ -20,7 +20,12 @@ published literature. It has three parts:
    predictor odds ratios folded in as an evidence block, so baseline risk,
    treatment effect and patient-factor slopes come from a single joint posterior
    (no normal approximation, no continuity corrections).
-5. **Individualised treatment benefit** — turns the above into a per-patient
+5. **Latent-covariate model** — the same idea done exactly: individual patient
+   risk factors are treated as **latent and marginalised out** of the aggregate
+   counts (exact enumeration of the binary profiles + Gauss–Hermite quadrature
+   over age), with published **prevalences and odds ratios** both used as data.
+   This removes the linear-offset (Jensen) approximation in the unified model.
+6. **Individualised treatment benefit** — turns these into a per-patient
    absolute risk reduction and number-needed-to-treat, with credible intervals,
    exposed through a command-line predictor (`predict.py`).
 
@@ -56,6 +61,7 @@ clavicle-fracture-analysis/
 │   ├── meta_analysis.py             # DerSimonian–Laird RE meta-analysis + forest plot
 │   ├── hierarchical_meta.py         # PyMC/NUTS 3-level Bayesian meta-analysis
 │   ├── unified_model.py             # PyMC/NUTS single joint fit to arm counts + ORs
+│   ├── latent_integration_model.py  # exact latent-covariate marginalisation fit
 │   ├── risk_model.py                # points score, logistic regression, tree, calculator
 │   └── treatment_benefit.py         # baseline risk x treatment effect -> ARR/NNT
 ├── outputs/                         # generated figures, tables, text reports
@@ -91,9 +97,10 @@ python predict.py --age 40 --smoking --displacement --json          # machine-re
 python predict.py --age 40 --smoking --displacement --model two-stage  # cross-check
 ```
 
-By default it uses the **unified single-fit model** (`src/unified_model.py`); the
-`--model two-stage` flag instead combines the separate risk model and
-meta-analysis posteriors as a cross-check.
+By default it uses the **latent-covariate model** (`src/latent_integration_model.py`);
+`--model unified` uses the linear-offset joint fit and `--model two-stage`
+combines the separate risk model and meta-analysis posteriors, both as
+cross-checks.
 
 Example output:
 
