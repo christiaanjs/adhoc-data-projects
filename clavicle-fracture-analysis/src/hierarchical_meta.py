@@ -170,6 +170,13 @@ def run():
         m = groups == g
         sub[lab] = dersimonian_laird(y[m], v[m])
 
+    # Persist RR posterior draws by location so the treatment-benefit CLI can
+    # propagate the full uncertainty of the meta-analytic effect.
+    np.savez(os.path.join(OUT, "rr_posterior.npz"),
+             midshaft=np.exp(flat("mu_midshaft")),
+             distal=np.exp(flat("mu_distal")),
+             overall=np.exp(flat("M")))
+
     # ----- write outputs -----
     summ.to_csv(os.path.join(OUT, "hier_pooled_estimates.csv"), index=False)
     shrunk_df.to_csv(os.path.join(OUT, "hier_shrunken_studies.csv"), index=False)

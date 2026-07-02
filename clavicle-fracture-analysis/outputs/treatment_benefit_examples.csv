@@ -1,0 +1,5 @@
+patient,nonop risk,op risk,ARR,NNT (95% CrI),interpretation
+"Young, minimally displaced (midshaft)",3%,0%,3%,38 (30-50),small absolute benefit (high NNT)
+Typical displaced midshaft,8%,1%,7%,14 (12-18),moderate absolute benefit
+"Older smoker, comminuted+shortened (midshaft)",68%,9%,58%,2 (2-2),large absolute benefit (low NNT)
+Displaced distal (Neer II),25%,4%,21%,5 (4-6),large absolute benefit (low NNT)

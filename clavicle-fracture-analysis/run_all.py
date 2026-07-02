@@ -17,6 +17,8 @@ import pandas as pd
 import meta_analysis
 import risk_model
 import hierarchical_meta
+import treatment_benefit
+from treatment_benefit import Patient, benefit_band
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, "outputs")
@@ -37,7 +39,33 @@ def main():
     print("\n########## 3. PREDICTIVE MODEL ##########\n")
     rm = risk_model.run()
 
-    print("\n########## 4. REPORT ##########\n")
+    print("\n########## 4. INDIVIDUALISED TREATMENT BENEFIT ##########\n")
+    bench_patients = [
+        ("Young, minimally displaced (midshaft)", Patient(age=25)),
+        ("Typical displaced midshaft", Patient(age=40, complete_displacement=1)),
+        ("Older smoker, comminuted+shortened (midshaft)",
+         Patient(age=62, female=1, smoking=1, complete_displacement=1,
+                 comminution=1, shortening_gt2cm=1)),
+        ("Displaced distal (Neer II)",
+         Patient(age=55, complete_displacement=1, location="distal")),
+    ]
+    brows = []
+    for label, p in bench_patients:
+        r = treatment_benefit.treatment_benefit(p)
+        brows.append((
+            label,
+            f"{r['risk_nonoperative']['median']*100:.0f}%",
+            f"{r['risk_operative']['median']*100:.0f}%",
+            f"{r['absolute_risk_reduction']['median']*100:.0f}%",
+            f"{r['nnt']['median']:.0f} ({r['nnt']['lo']:.0f}-{r['nnt']['hi']:.0f})",
+            benefit_band(r['nnt']['median']),
+        ))
+    bench_df = pd.DataFrame(brows, columns=[
+        "patient", "nonop risk", "op risk", "ARR", "NNT (95% CrI)", "interpretation"])
+    bench_df.to_csv(os.path.join(OUT, "treatment_benefit_examples.csv"), index=False)
+    print(bench_df.to_string(index=False))
+
+    print("\n########## 5. REPORT ##########\n")
     trials = pd.read_csv(os.path.join(ROOT, "data", "meta_analysis_trials.csv"))
     ma_txt = open(os.path.join(OUT, "meta_analysis_report.txt")).read()
     rr = ma_results["RR"][2]
@@ -224,6 +252,43 @@ A young, minimally displaced fracture has a single-digit nonunion risk (surgery
 rarely justified), whereas an older female smoker with a comminuted, shortened,
 completely displaced fracture is a coin-flip — the group in whom the meta-analytic
 benefit of surgery is concentrated.
+
+---
+
+## Part 4 — Putting it together: individualised benefit of surgery
+
+Parts 1–2 give a *population* relative effect; Part 3 gives an *individual*
+baseline risk. Multiplying them gives the number a patient actually cares about —
+their **absolute** risk reduction and number-needed-to-treat from surgery:
+
+```
+risk_nonop = baseline model (Part 3)
+risk_op    = risk_nonop x RR            (RR from the meta-analysis posterior, Part 2)
+ARR        = risk_nonop - risk_op ;   NNT = 1 / ARR
+```
+
+Uncertainty from **both** the baseline model (logistic coefficient covariance)
+and the meta-analytic effect (RR posterior draws) is propagated by Monte Carlo,
+so every number carries a 95% credible interval. Distal fractures use the distal
+RR posterior and a higher baseline rate.
+
+{fmt_table(bench_df, 1)}
+
+The relative effect of surgery is nearly constant (~7-fold risk reduction), but
+the **absolute** benefit ranges from trivial (NNT ≈ 36 for a young minimally
+displaced fracture — surgery hard to justify) to decisive (NNT ≈ 2 for a
+high-risk midshaft, NNT ≈ 5 for a displaced distal fracture). This is the
+clinical payoff of combining the three analyses, and it is exactly what the
+command-line tool exposes:
+
+```bash
+python predict.py --age 62 --female --smoking --displacement --comminution --shortening
+python predict.py --age 55 --displacement --location distal
+python predict.py --age 40 --smoking --displacement --json   # machine-readable
+```
+
+Implemented in [`src/treatment_benefit.py`](../src/treatment_benefit.py) and
+[`predict.py`](../predict.py).
 
 ---
 

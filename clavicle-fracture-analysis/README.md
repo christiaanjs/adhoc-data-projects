@@ -15,6 +15,10 @@ published literature. It has three parts:
    and fracture factors (smoking, displacement, shortening, comminution, sex,
    age), delivered as a logistic regression, a bedside **points score**, and a
    decision tree, then compared on discrimination and calibration.
+4. **Individualised treatment benefit** — combines the baseline risk (part 3)
+   with the meta-analytic relative effect (parts 1–2) to give a per-patient
+   absolute risk reduction and number-needed-to-treat, with credible intervals,
+   exposed through a command-line predictor (`predict.py`).
 
 The brief was to *favour models that are interpretable but have high predictive
 power*. The headline finding is that the simple points score matches the full
@@ -47,10 +51,12 @@ clavicle-fracture-analysis/
 ├── src/
 │   ├── meta_analysis.py             # DerSimonian–Laird RE meta-analysis + forest plot
 │   ├── hierarchical_meta.py         # PyMC/NUTS 3-level Bayesian meta-analysis
-│   └── risk_model.py                # points score, logistic regression, tree, calculator
+│   ├── risk_model.py                # points score, logistic regression, tree, calculator
+│   └── treatment_benefit.py         # baseline risk x meta-analytic RR -> ARR/NNT
 ├── outputs/                         # generated figures, tables, text reports
 ├── report/REPORT.md                 # auto-generated report
 ├── run_all.py                       # runs everything and regenerates the report
+├── predict.py                       # command-line outcome predictor
 └── requirements.txt
 ```
 
@@ -64,6 +70,31 @@ python3 -m venv .venv && . .venv/bin/activate
 pip install -r requirements.txt
 python run_all.py
 ```
+
+## Predict outcomes for a patient (CLI)
+
+After `run_all.py` has generated the model artifacts, use the command-line
+predictor. It reports the nonunion risk with and without surgery, the absolute
+risk reduction, and the number-needed-to-treat (each with a 95% credible
+interval), plus the interpretable points score.
+
+```bash
+python predict.py --age 28
+python predict.py --age 62 --female --smoking --displacement --comminution --shortening
+python predict.py --age 55 --displacement --location distal
+python predict.py --age 40 --smoking --displacement --json   # machine-readable
+```
+
+Example output:
+
+```
+ Nonunion risk if treated NONoperatively : 67.5%  (95% CrI 62.1-72.5%)
+ Nonunion risk if treated operatively    : 9.4%   (95% CrI 4.4-20.1%)
+ Absolute risk reduction from surgery    : 57.8%  (95% CrI 46.6-65.1%)
+ Number needed to treat (NNT)            : 2      (95% CrI 2-2)
+```
+
+Run `python predict.py --help` for all flags.
 
 ## Important caveats
 

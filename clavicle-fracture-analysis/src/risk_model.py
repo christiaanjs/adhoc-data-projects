@@ -305,6 +305,14 @@ def run():
     coefs = coefficient_table(model, pred_df)
     coefs.to_csv(os.path.join(OUT, "logistic_coefficients.csv"), index=False)
 
+    # Persist mean + covariance so the CLI can reconstruct the model (and
+    # propagate coefficient uncertainty) without refitting.
+    terms = list(model.params.index)
+    np.savez(os.path.join(OUT, "risk_model_logistic.npz"),
+             terms=np.array(terms, dtype=object),
+             mean=model.params.to_numpy(float),
+             cov=model.cov_params().to_numpy(float))
+
     # 3. Cross-validated comparison
     metrics, curves = cv_metrics(df)
     metrics = pd.concat([

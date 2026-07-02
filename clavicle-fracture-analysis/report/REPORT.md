@@ -192,6 +192,48 @@ benefit of surgery is concentrated.
 
 ---
 
+## Part 4 — Putting it together: individualised benefit of surgery
+
+Parts 1–2 give a *population* relative effect; Part 3 gives an *individual*
+baseline risk. Multiplying them gives the number a patient actually cares about —
+their **absolute** risk reduction and number-needed-to-treat from surgery:
+
+```
+risk_nonop = baseline model (Part 3)
+risk_op    = risk_nonop x RR            (RR from the meta-analysis posterior, Part 2)
+ARR        = risk_nonop - risk_op ;   NNT = 1 / ARR
+```
+
+Uncertainty from **both** the baseline model (logistic coefficient covariance)
+and the meta-analytic effect (RR posterior draws) is propagated by Monte Carlo,
+so every number carries a 95% credible interval. Distal fractures use the distal
+RR posterior and a higher baseline rate.
+
+| patient                                       | nonop risk   | op risk   | ARR   | NNT (95% CrI)   | interpretation                    |
+|:----------------------------------------------|:-------------|:----------|:------|:----------------|:----------------------------------|
+| Young, minimally displaced (midshaft)         | 3%           | 0%        | 3%    | 38 (30-50)      | small absolute benefit (high NNT) |
+| Typical displaced midshaft                    | 8%           | 1%        | 7%    | 14 (12-18)      | moderate absolute benefit         |
+| Older smoker, comminuted+shortened (midshaft) | 68%          | 9%        | 58%   | 2 (2-2)         | large absolute benefit (low NNT)  |
+| Displaced distal (Neer II)                    | 25%          | 4%        | 21%   | 5 (4-6)         | large absolute benefit (low NNT)  |
+
+The relative effect of surgery is nearly constant (~7-fold risk reduction), but
+the **absolute** benefit ranges from trivial (NNT ≈ 36 for a young minimally
+displaced fracture — surgery hard to justify) to decisive (NNT ≈ 2 for a
+high-risk midshaft, NNT ≈ 5 for a displaced distal fracture). This is the
+clinical payoff of combining the three analyses, and it is exactly what the
+command-line tool exposes:
+
+```bash
+python predict.py --age 62 --female --smoking --displacement --comminution --shortening
+python predict.py --age 55 --displacement --location distal
+python predict.py --age 40 --smoking --displacement --json   # machine-readable
+```
+
+Implemented in [`src/treatment_benefit.py`](../src/treatment_benefit.py) and
+[`predict.py`](../predict.py).
+
+---
+
 ## How to reproduce
 
 ```bash
