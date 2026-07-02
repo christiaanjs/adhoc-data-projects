@@ -1,0 +1,6 @@
+=== Random-effects meta-analysis: nonunion, operative vs nonoperative ===
+Trials: 6   Patients: 623 (operative 318, nonoperative 305)
+Crude nonunion risk: operative 1.9%  nonoperative 16.7%
+Absolute risk difference: 14.8 percentage points   NNT (to prevent one nonunion): 7
+RR: 0.139  95% CI [0.063, 0.304]  (favours operative);  I^2=0%  tau^2=0.000  Q=1.24 (p=0.941)
+OR: 0.117  95% CI [0.051, 0.265]  (favours operative);  I^2=0%  tau^2=0.000  Q=1.32 (p=0.933)
