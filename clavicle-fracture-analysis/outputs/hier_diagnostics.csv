@@ -1,0 +1,6 @@
+parameter,R_hat,ESS
+M,1.0,4574.0
+mu[midshaft],1.0,12606.0
+mu[distal],1.0,12518.0
+tau,1.0,6379.0
+omega,1.0,5447.0

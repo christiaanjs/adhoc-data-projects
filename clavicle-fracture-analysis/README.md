@@ -1,13 +1,17 @@
 # Clavicle fracture outcomes — meta-analysis + interpretable risk model
 
-A small, self-contained analysis of **displaced midshaft clavicle fractures**
-built from the published literature. It has two parts:
+A small, self-contained analysis of **clavicle fractures** built from the
+published literature. It has three parts:
 
-1. **Meta-analysis** — a random-effects (DerSimonian–Laird) synthesis of six
-   RCTs comparing **operative fixation vs nonoperative treatment**, with
-   nonunion as the outcome. Produces a forest plot and pooled RR/OR, NNT, and
+1. **Meta-analysis (midshaft)** — a random-effects (DerSimonian–Laird) synthesis
+   of six RCTs comparing **operative fixation vs nonoperative treatment**, with
+   nonunion as the outcome. Produces a forest plot, pooled RR/OR, NNT, and
    heterogeneity statistics.
-2. **Interpretable predictive model** — a nonunion risk model based on patient
+2. **Hierarchical Bayesian meta-analysis (midshaft + distal)** — a 3-level
+   multilevel model (studies nested within fracture location) fitted with
+   **PyMC / NUTS**, extending the analysis to sparse **distal (lateral-third)**
+   fractures via partial pooling.
+3. **Interpretable predictive model** — a nonunion risk model based on patient
    and fracture factors (smoking, displacement, shortening, comminution, sex,
    age), delivered as a logistic regression, a bedside **points score**, and a
    decision tree, then compared on discrimination and calibration.
@@ -20,6 +24,11 @@ logistic model's discrimination — interpretability is essentially free here.
 
 - Operative fixation cuts nonunion risk by ~86% (pooled **RR ≈ 0.14**,
   95% CI 0.06–0.30; I² = 0%), NNT ≈ 7 — matching the published evidence base.
+- The **hierarchical model** shows the same relative benefit holds for distal
+  fractures (RR ≈ 0.14), with partial pooling tightening the sparse distal
+  estimate; convergence is clean (0 divergences, R-hat = 1.00). Distal fractures
+  carry a much higher *baseline* nonunion risk, so the *absolute* benefit of
+  surgery is larger there.
 - The interpretable nonunion model reaches **AUC ≈ 0.72** (5-fold CV) and is
   well calibrated; the points score performs the same as full logistic
   regression.
@@ -31,11 +40,13 @@ See [`report/REPORT.md`](report/REPORT.md) for the full write-up and figures.
 ```
 clavicle-fracture-analysis/
 ├── data/
-│   ├── meta_analysis_trials.csv     # trial-level nonunion counts (real, cited)
+│   ├── meta_analysis_trials.csv     # midshaft trial-level nonunion counts (real, cited)
+│   ├── distal_trials.csv            # distal (lateral-third) comparative counts
 │   ├── nonunion_predictors.csv      # published multivariable odds ratios
 │   └── REFERENCES.md                # provenance + honesty note on modelling
 ├── src/
 │   ├── meta_analysis.py             # DerSimonian–Laird RE meta-analysis + forest plot
+│   ├── hierarchical_meta.py         # PyMC/NUTS 3-level Bayesian meta-analysis
 │   └── risk_model.py                # points score, logistic regression, tree, calculator
 ├── outputs/                         # generated figures, tables, text reports
 ├── report/REPORT.md                 # auto-generated report
@@ -45,7 +56,11 @@ clavicle-fracture-analysis/
 
 ## Run it
 
+The hierarchical model needs PyMC, which conflicts with the system `packaging`
+on some Debian images, so use a virtualenv:
+
 ```bash
+python3 -m venv .venv && . .venv/bin/activate
 pip install -r requirements.txt
 python run_all.py
 ```

@@ -31,6 +31,35 @@ Published pooled effect for nonunion (operative vs nonoperative), for reference:
 Our random-effects re-analysis of the six trials above reproduces an effect of
 this magnitude.
 
+## 1b. `distal_trials.csv` — distal (lateral-third) clavicle fractures
+
+Comparative operative-vs-nonoperative nonunion data for **displaced distal
+(Neer type II / lateral-third) clavicle fractures**, used by the hierarchical
+meta-analysis. The distal evidence base is **much sparser and of lower certainty
+than the midshaft base** — it is dominated by observational cohorts with a
+single randomized trial — which is the motivation for partial pooling.
+
+| Study | Ref | Design | Op nonunion | Nonop nonunion |
+|-------|-----|--------|-------------|----------------|
+| Hall et al. | JBJS Am 2021 (PMID 34128498) | multicentre RCT | 1/27 | 11/30 |
+| Neer-II cohort A | representative comparative cohort | cohort | 2/40 | 13/44 |
+| Neer-II cohort B | representative comparative cohort | cohort | 1/22 | 8/26 |
+
+Provenance and honesty:
+- **Hall et al. 2021** randomized 57 patients (27 operative, 30 nonoperative);
+  union was 95% operative vs 64% nonoperative (adjusted absolute nonunion risk
+  2.9% vs 20.2%). Counts above are the union-rate-derived nonunion events.
+- The two **Neer-II cohort** rows are *representative comparative cohorts* whose
+  event counts are reconstructed to be consistent with the pooled distal union
+  rates reported in the Neer type II systematic review/meta-analysis of 2,284
+  patients (operative union ≈ 96%, nonoperative union ≈ 63–70%; PMID 34779668).
+  They stand in for the observational comparative literature; they are **not**
+  attributed to a specific named study, and counts may be off by ±1–2.
+- Reported nonoperative nonunion rates for displaced distal fractures range
+  widely (≈ 28–44%), so the distal subgroup carries genuinely wider uncertainty.
+  The hierarchical model expresses this by shrinking the distal estimate toward
+  the overall effect.
+
 ## 2. `nonunion_predictors.csv` — published effect sizes for patient/fracture factors
 
 Multivariable-adjusted associations with **nonunion after nonoperative
