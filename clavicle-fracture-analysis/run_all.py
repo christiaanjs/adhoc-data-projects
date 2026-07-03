@@ -19,6 +19,7 @@ import risk_model
 import hierarchical_meta
 import unified_model
 import latent_integration_model
+import ipd_evidence_model
 import treatment_benefit
 from treatment_benefit import Patient, benefit_band
 
@@ -47,6 +48,9 @@ def main():
     print("\n########## 3c. LATENT-COVARIATE MODEL (exact marginalisation) ##########\n")
     lm = latent_integration_model.run()
 
+    print("\n########## 3d. IPD ESTIMATION-PROCESS EVIDENCE MODEL ##########\n")
+    im = ipd_evidence_model.run()
+
     print("\n########## 4. INDIVIDUALISED TREATMENT BENEFIT ##########\n")
     bench_patients = [
         ("Young, minimally displaced (midshaft)", Patient(age=25)),
@@ -59,7 +63,7 @@ def main():
     ]
     brows = []
     for label, p in bench_patients:
-        r = treatment_benefit.treatment_benefit_latent(p)
+        r = treatment_benefit.treatment_benefit_ipd(p)
         brows.append((
             label,
             f"{r['risk_nonoperative']['median']*100:.0f}%",
@@ -100,6 +104,18 @@ def main():
     # Latent-covariate model summary for the report.
     ls = lm["summary"].set_index("location")
     l_prev = lm["prevalences"]
+
+    # IPD estimation-process model summary for the report.
+    isum = im["summary"].set_index("location")
+    i_gamma = im["gamma"]
+    i_corr = im["corr"]
+    pred_names = list(i_gamma["predictor"])
+    # strongest off-diagonal gamma correlation for the narrative
+    import numpy as _np
+    _iu = _np.triu_indices(len(pred_names), 1)
+    _j = int(_np.argmax(_np.abs(i_corr[_iu])))
+    i_corr_pair = (pred_names[_iu[0][_j]], pred_names[_iu[1][_j]],
+                   float(i_corr[_iu[0][_j], _iu[1][_j]]))
 
     md = f"""# Clavicle fracture outcomes: meta-analysis and interpretable risk model
 
@@ -355,9 +371,60 @@ prevalences are recovered from the data with proper uncertainty:
 
 {fmt_table(l_prev[['factor','prev_posterior','prev_lo','prev_hi','prev_published']], 2)}
 
-This is the most principled of the joint models and is the **default** used by
-`predict.py`. Implemented in
+Implemented in
 [`src/latent_integration_model.py`](../src/latent_integration_model.py).
+
+---
+
+## Part 3d — Modelling how the published odds ratios were estimated
+
+All the models so far feed each published OR in as `logOR_k ~ Normal(gamma_k,
+reported_se_k)`. That (a) trusts the reported standard error, (b) treats the
+coefficients as *independent* even though each source study fitted them jointly,
+and (c) is a Wald approximation detached from the data that produced it. This
+model instead builds a **measurement model of the estimation process**: each
+source cohort fitted a logistic regression to its individual patients, so its
+reported coefficients are the maximum-likelihood estimate, whose sampling
+distribution is
+
+```
+gamma_hat_s ~ MvNormal( gamma , V_s ) ,   V_s = [ N_s · E_x( w(x) x xᵀ ) ]⁻¹
+```
+
+— the inverse *expected Fisher information*. `V_s` is derived from the study's
+**design** (sample size `N_s`, covariate distribution, baseline outcome rate)
+and the shared coefficients, not from reported SEs. It automatically supplies the
+across-coefficient correlations and scales precision with the information the
+study actually had. Each source cohort's overall nonunion count is used as data
+too (`y_s ~ Binomial(N_s, marginal rate)`). Source cohorts (Robinson 2004,
+N=868; Murray 2013, N=200) are in
+[`data/source_studies.csv`](../data/source_studies.csv). Clean sampling
+(**{int(im['diverging'])} divergences, max R-hat = {im['max_rhat']:.3f}**).
+
+Predictor ORs under the estimation-process model (posterior vs published point
+estimate):
+
+{fmt_table(i_gamma[['predictor','OR_posterior','OR_lo','OR_hi','OR_published']], 2)}
+
+![OR comparison](../outputs/ipd_or_comparison.png)
+
+Unlike the independent-normal block, this model induces **correlated** predictor
+coefficients (the strongest here is corr({i_corr_pair[0]}, {i_corr_pair[1]}) =
+{i_corr_pair[2]:+.2f}), because they were co-estimated on the same cohort — the
+full correlation matrix is in
+[`outputs/ipd_gamma_correlation.csv`](../outputs/ipd_gamma_correlation.csv). The
+treatment effect and baseline are essentially unchanged (midshaft OR
+{isum.loc['midshaft','OR_treat']:.2f}, reference baseline
+{isum.loc['midshaft','base_risk_ref']*100:.1f}%), as expected — the point of this
+model is a more honest, correlation-aware representation of *predictor*
+uncertainty, which then propagates into individual risk. It is the **default**
+used by `predict.py`. Implemented in
+[`src/ipd_evidence_model.py`](../src/ipd_evidence_model.py).
+
+*(The residual approximation is asymptotic normality of the MLE — the same
+assumption behind any published Wald confidence interval — plus using the shared
+latent prevalences for each source cohort's Fisher information, since the cohorts'
+own covariate tables are not published.)*
 
 ---
 
@@ -372,11 +439,11 @@ logit risk_op    = logit risk_nonop + treatment_effect[location]
 ARR = risk_nonop - risk_op ;   NNT = 1 / ARR
 ```
 
-By default these are read straight off the **latent-covariate joint posterior**
-from Part 3c, so baseline, treatment effect and predictor slopes are mutually
-consistent and all uncertainty is propagated together (every number carries a
-95% credible interval). (`predict.py --model unified` or `--model two-stage`
-give cross-checks.)
+By default these are read straight off the **estimation-process joint posterior**
+from Part 3d, so baseline, treatment effect and (correlated) predictor slopes are
+mutually consistent and all uncertainty is propagated together (every number
+carries a 95% credible interval). (`predict.py --model latent | unified |
+two-stage` give cross-checks.)
 
 {fmt_table(bench_df, 1)}
 

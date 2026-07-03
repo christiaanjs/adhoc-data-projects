@@ -80,6 +80,24 @@ modelling pipeline (see below). Odds ratios are taken from:
 - Systematic reviews of nonunion predictors (Int Orthop 2014; Injury 2015/2025)
   corroborating displacement, comminution, shortening, smoking, age and sex.
 
+## 2b. `source_studies.csv` — cohorts behind the predictor odds ratios
+
+The published multivariable odds ratios were each estimated in a specific
+observational cohort. `source_studies.csv` records, for the estimation-process
+evidence model (`src/ipd_evidence_model.py`), which predictors each cohort
+reported, its sample size, its overall nonunion count, and its mean age:
+
+- **Robinson 2004** (N=868, nonunion 6.2%): age, female sex, complete
+  displacement, shortening. Prospective nonoperative cohort of all clavicle
+  fractures.
+- **Murray 2013** (N=200, nonunion ≈16.5%): smoking, comminution. Displaced
+  midshaft nonoperative cohort.
+
+Sample sizes and event counts are the reported cohort figures; the source
+cohorts' internal covariate prevalences are not published, so the model uses the
+shared latent prevalences for the Fisher-information calculation (documented
+approximation).
+
 ## Important honesty note on the predictive model
 
 Individual patient-level data (IPD) for clavicle fractures is not publicly

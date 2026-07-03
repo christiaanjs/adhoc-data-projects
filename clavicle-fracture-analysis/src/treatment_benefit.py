@@ -130,6 +130,7 @@ def treatment_benefit(patient: Patient, n_draws: int = N_DRAWS, seed: int = 0):
 
 UNIFIED_NPZ = os.path.join(OUT, "unified_posterior.npz")
 LATENT_NPZ = os.path.join(OUT, "latent_posterior.npz")
+IPD_NPZ = os.path.join(OUT, "ipd_posterior.npz")
 # Predictor order in the joint models (age is per-decade, centred at 40).
 JOINT_PRED_ORDER = ["age", "female", "smoking", "complete_displacement",
                     "comminution", "shortening_gt2cm"]
@@ -179,6 +180,11 @@ def treatment_benefit_unified(patient: Patient):
 def treatment_benefit_latent(patient: Patient):
     """Individualised benefit from the exact latent-marginalisation model."""
     return _benefit_from_joint_posterior(patient, LATENT_NPZ)
+
+
+def treatment_benefit_ipd(patient: Patient):
+    """Individualised benefit from the estimation-process (Fisher-info) model."""
+    return _benefit_from_joint_posterior(patient, IPD_NPZ)
 
 
 def benefit_band(nnt_median: float) -> str:

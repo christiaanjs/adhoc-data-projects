@@ -30,7 +30,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src
 import pandas as pd  # noqa: E402
 from treatment_benefit import (Patient, treatment_benefit,  # noqa: E402
                                treatment_benefit_unified,
-                               treatment_benefit_latent, benefit_band)
+                               treatment_benefit_latent,
+                               treatment_benefit_ipd, benefit_band)
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 POINTS_CSV = os.path.join(ROOT, "outputs", "points_table.csv")
@@ -51,10 +52,11 @@ def parse_args(argv=None):
                    help="shortening > 2 cm")
     p.add_argument("--location", choices=["midshaft", "distal"],
                    default="midshaft", help="fracture location")
-    p.add_argument("--model", choices=["latent", "unified", "two-stage"],
-                   default="latent",
-                   help="latent = exact covariate-marginalisation joint fit "
-                        "(default); unified = linear-offset joint fit; "
+    p.add_argument("--model", choices=["ipd", "latent", "unified", "two-stage"],
+                   default="ipd",
+                   help="ipd = estimation-process (Fisher-info) evidence model "
+                        "(default); latent = exact covariate-marginalisation; "
+                        "unified = linear-offset joint fit; "
                         "two-stage = separate risk model x meta-analysis")
     p.add_argument("--json", action="store_true",
                    help="emit machine-readable JSON instead of a report")
@@ -90,7 +92,9 @@ def main(argv=None):
         shortening_gt2cm=int(args.shortening), location=args.location)
 
     try:
-        if args.model == "latent":
+        if args.model == "ipd":
+            res = treatment_benefit_ipd(patient)
+        elif args.model == "latent":
             res = treatment_benefit_latent(patient)
         elif args.model == "unified":
             res = treatment_benefit_unified(patient)

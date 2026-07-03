@@ -25,7 +25,13 @@ published literature. It has three parts:
    counts (exact enumeration of the binary profiles + Gauss–Hermite quadrature
    over age), with published **prevalences and odds ratios** both used as data.
    This removes the linear-offset (Jensen) approximation in the unified model.
-6. **Individualised treatment benefit** — turns these into a per-patient
+6. **Estimation-process (IPD) model** — models *how* each published odds ratio
+   was estimated: each source cohort's reported coefficients are the MLE of a
+   logistic fit, so they enter as `MvNormal(γ, inverse-Fisher-information)`, with
+   the covariance derived from the study's sample size and design rather than its
+   reported SEs. This gives correlation-aware, information-scaled predictor
+   uncertainty. Used as the default by `predict.py`.
+7. **Individualised treatment benefit** — turns these into a per-patient
    absolute risk reduction and number-needed-to-treat, with credible intervals,
    exposed through a command-line predictor (`predict.py`).
 
@@ -56,12 +62,14 @@ clavicle-fracture-analysis/
 │   ├── meta_analysis_trials.csv     # midshaft trial-level nonunion counts (real, cited)
 │   ├── distal_trials.csv            # distal (lateral-third) comparative counts
 │   ├── nonunion_predictors.csv      # published multivariable odds ratios
+│   ├── source_studies.csv           # cohorts behind the ORs (N, events) for the IPD model
 │   └── REFERENCES.md                # provenance + honesty note on modelling
 ├── src/
 │   ├── meta_analysis.py             # DerSimonian–Laird RE meta-analysis + forest plot
 │   ├── hierarchical_meta.py         # PyMC/NUTS 3-level Bayesian meta-analysis
 │   ├── unified_model.py             # PyMC/NUTS single joint fit to arm counts + ORs
 │   ├── latent_integration_model.py  # exact latent-covariate marginalisation fit
+│   ├── ipd_evidence_model.py        # models the OR estimation process (Fisher info)
 │   ├── risk_model.py                # points score, logistic regression, tree, calculator
 │   └── treatment_benefit.py         # baseline risk x treatment effect -> ARR/NNT
 ├── outputs/                         # generated figures, tables, text reports
@@ -97,10 +105,9 @@ python predict.py --age 40 --smoking --displacement --json          # machine-re
 python predict.py --age 40 --smoking --displacement --model two-stage  # cross-check
 ```
 
-By default it uses the **latent-covariate model** (`src/latent_integration_model.py`);
-`--model unified` uses the linear-offset joint fit and `--model two-stage`
-combines the separate risk model and meta-analysis posteriors, both as
-cross-checks.
+By default it uses the **estimation-process model** (`src/ipd_evidence_model.py`);
+`--model latent`, `--model unified` and `--model two-stage` provide cross-checks
+of increasing simplicity.
 
 Example output:
 
