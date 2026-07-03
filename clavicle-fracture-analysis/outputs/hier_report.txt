@@ -1,0 +1,17 @@
+=== Hierarchical Bayesian meta-analysis (PyMC/NUTS): midshaft + distal ===
+Studies: 9 (6 midshaft, 3 distal); 4 chains x 3000 draws (tune 2000); divergences=0; max R-hat=1.000
+  Overall (both locations)     RR 0.14 [0.04, 0.53]
+  Midshaft                     RR 0.14 [0.06, 0.30]
+  Distal (lateral-third)       RR 0.14 [0.06, 0.35]
+  Between-study SD  tau  : median 0.27 [0.01, 1.01]
+  Between-location SD omega: median 0.45 [0.02, 1.84] (weakly identified: only 2 groups)
+  P(midshaft RR < distal RR) = 0.51  (both strongly favour surgery; little evidence of a location difference)
+  Independent subgroup random-effects (no cross-location pooling):
+    midshaft   RR 0.14 [0.06, 0.30]
+    distal     RR 0.14 [0.05, 0.39]
+  Convergence (R-hat < 1.01 and healthy ESS expected):
+    M              R-hat 1.000  ESS 4574
+    mu[midshaft]   R-hat 1.000  ESS 12606
+    mu[distal]     R-hat 1.000  ESS 12518
+    tau            R-hat 1.000  ESS 6379
+    omega          R-hat 1.000  ESS 5447

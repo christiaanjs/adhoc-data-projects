@@ -1,0 +1,16 @@
+=== IPD estimation-process evidence model ===
+Trial counts + source-study Fisher-information measurement model; 4 chains; divergences=0; max R-hat=1.000
+  midshaft  treatment OR 0.08 [0.03, 0.17]   reference baseline 4.6%
+  distal    treatment OR 0.08 [0.03, 0.20]   reference baseline 9.5%
+Predictor ORs (posterior vs published point estimate):
+  age                    1.20 [0.97, 1.48]  (pub 1.20)
+  female                 1.47 [0.82, 2.62]  (pub 1.50)
+  smoking                3.53 [1.58, 7.87]  (pub 3.76)
+  complete_displacement  2.21 [1.19, 4.00]  (pub 2.30)
+  comminution            1.67 [0.77, 3.58]  (pub 1.75)
+  shortening_gt2cm       1.95 [1.11, 3.45]  (pub 2.00)
+Strongest gamma correlations induced by the joint estimation model:
+  corr(age, smoking) = +0.03
+  corr(female, comminution) = -0.02
+  corr(female, smoking) = -0.02
+  corr(comminution, shortening_gt2cm) = -0.02

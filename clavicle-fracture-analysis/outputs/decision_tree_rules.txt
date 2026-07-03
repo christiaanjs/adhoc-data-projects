@@ -1,0 +1,22 @@
+|--- smoking <= 0.50
+|   |--- complete_displacement <= 0.50
+|   |   |--- age_decades_c <= 0.40
+|   |   |   |--- class: 0
+|   |   |--- age_decades_c >  0.40
+|   |   |   |--- class: 0
+|   |--- complete_displacement >  0.50
+|   |   |--- shortening_gt2cm <= 0.50
+|   |   |   |--- class: 0
+|   |   |--- shortening_gt2cm >  0.50
+|   |   |   |--- class: 0
+|--- smoking >  0.50
+|   |--- complete_displacement <= 0.50
+|   |   |--- shortening_gt2cm <= 0.50
+|   |   |   |--- class: 0
+|   |   |--- shortening_gt2cm >  0.50
+|   |   |   |--- class: 0
+|   |--- complete_displacement >  0.50
+|   |   |--- age_decades_c <= 1.32
+|   |   |   |--- class: 0
+|   |   |--- age_decades_c >  1.32
+|   |   |   |--- class: 1

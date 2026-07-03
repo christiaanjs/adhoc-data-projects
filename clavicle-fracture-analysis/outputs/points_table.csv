@@ -1,0 +1,7 @@
+factor,condition,log_or,points
+age,per decade over 40,0.1823215567939546,1
+female,present (ref: male),0.4054651081081644,2
+smoking,present (ref: nonsmoker),1.324418957401803,7
+complete_displacement,present (ref: partial/undisplaced),0.8329091229351039,5
+comminution,present (ref: simple),0.5596157879354227,3
+shortening_gt2cm,present (ref: <2cm),0.6931471805599453,4

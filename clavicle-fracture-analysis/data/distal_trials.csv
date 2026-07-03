@@ -1,0 +1,4 @@
+study,year,n_op,events_op,n_nonop,events_nonop,mean_age,pct_male,country,design
+Hall,2021,27,1,30,11,44.0,60,Canada,RCT
+NeerII_cohort_A,2018,40,2,44,13,48.0,58,mixed,cohort
+NeerII_cohort_B,2016,22,1,26,8,46.0,55,mixed,cohort

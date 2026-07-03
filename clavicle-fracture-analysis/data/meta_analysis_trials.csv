@@ -1,0 +1,7 @@
+study,year,n_op,events_op,n_nonop,events_nonop,mean_age,pct_male,country
+COTS,2007,62,2,49,7,33.5,84,Canada
+Smekal,2009,30,0,30,4,37.0,73,Austria
+Mirzatolooei,2011,30,1,30,4,29.0,80,Iran
+Virtanen,2012,28,0,23,3,39.0,71,Finland
+Robinson,2013,86,1,95,15,34.0,84,UK
+Woltz,2017,82,2,78,18,39.0,73,Netherlands

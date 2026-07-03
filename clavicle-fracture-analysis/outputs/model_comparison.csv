@@ -1,0 +1,4 @@
+model,AUC_cv,Brier_cv
+Logistic regression,0.7240561498790631,0.11562185290610029
+Decision tree (depth 3),0.6939698888436925,0.1197865835040307
+"Points score (a priori, unfit)",0.7219293359608309,

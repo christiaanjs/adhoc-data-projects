@@ -1,0 +1,13 @@
+=== Unified single-fit model (binomial counts + predictor ORs) ===
+Fitted to 9 studies x 2 arms = 18 binomial arm counts; 4 chains; divergences=0; max R-hat=1.000
+Treatment effect (operative vs nonoperative), odds ratio:
+  Overall   OR 0.10 [0.04, 0.47]
+  midshaft  OR 0.09 [0.04, 0.20]   reference-patient baseline nonunion 5.6% [3.4, 9.4]
+  distal    OR 0.10 [0.04, 0.24]   reference-patient baseline nonunion 10.5% [5.8, 18.1]
+Predictor ORs recovered (posterior vs published):
+  age                    1.20 [1.04, 1.39]  (pub 1.20)
+  female                 1.52 [0.97, 2.25]  (pub 1.50)
+  smoking                3.79 [1.73, 7.24]  (pub 3.76)
+  complete_displacement  2.31 [1.36, 3.73]  (pub 2.30)
+  comminution            1.77 [1.04, 2.83]  (pub 1.75)
+  shortening_gt2cm       2.03 [1.18, 3.29]  (pub 2.00)
