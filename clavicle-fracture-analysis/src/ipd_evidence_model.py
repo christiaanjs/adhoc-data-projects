@@ -89,6 +89,44 @@ def _design_matrix(mean_age_decades):
             B)
 
 
+def _source_cov(X, ghw, prof, prev_bin, N, events, gamma_hat, xidx):
+    """Constant Laplace covariance V_sub for a source study's reported coeffs.
+
+    The estimation-process likelihood is  gamma_hat ~ MVN(gamma, V_s), with
+    V_s = [N * E_x(w x xᵀ)]⁻¹ the inverse expected Fisher information. This is
+    the Wald/Laplace approximation of the study's likelihood, so V_s must be
+    evaluated ONCE at the study's estimate (gamma_hat, and alpha solved to match
+    its outcome rate) and held FIXED. Making V_s depend on the *sampled* gamma
+    (as an earlier version did) puts the parameter in a Gaussian's covariance,
+    which creates a funnel/ridge geometry -> poor mixing, low ESS, high R-hat and
+    inflated coefficient correlations. Computing it here in numpy keeps it a
+    constant and removes the per-step matrix inverse from the sampler.
+    """
+    # profile weights from fixed prevalences, times the age-quadrature weights
+    logprev = np.log(prev_bin)
+    log1m = np.log1p(-prev_bin)
+    Bbin = X[:, 2:]                                  # binary columns (M,5)
+    prof_logw = Bbin @ logprev + (1 - Bbin) @ log1m  # (M,)
+    pw = np.exp(prof_logw) * ghw                     # (M,)
+    # solve alpha so the marginal outcome rate matches events/N
+    target = events / N
+    lo, hi = -12.0, 8.0
+    for _ in range(80):
+        mid = 0.5 * (lo + hi)
+        mu = 1.0 / (1.0 + np.exp(-(mid + X[:, 1:] @ gamma_hat)))
+        if float(pw @ mu) < target:
+            lo = mid
+        else:
+            hi = mid
+    alpha = 0.5 * (lo + hi)
+    mu = 1.0 / (1.0 + np.exp(-(alpha + X[:, 1:] @ gamma_hat)))
+    wobs = mu * (1.0 - mu)
+    J = N * (X * (pw * wobs)[:, None]).T @ X + 1e-8 * np.eye(X.shape[1])
+    V = np.linalg.inv(J)
+    sub = np.array(xidx)
+    return V[np.ix_(sub, sub)]
+
+
 def run():
     counts = load_counts()
     pred_df, logor, se, prev0 = load_predictor_evidence()          # PRED_ORDER
@@ -108,6 +146,11 @@ def run():
     prev_success = np.round(prev_obs * PREV_NEFF).astype(int)
 
     # --- source-study measurement-model pieces ---
+    # For each source cohort precompute the CONSTANT Laplace covariance V_sub of
+    # its reported coefficients (inverse observed information at the published
+    # estimate), so the estimation-process likelihood is MvNormal(gamma_sub,
+    # V_sub) with V_sub fixed - see _source_cov for why this is the correct,
+    # non-pathological construction.
     src = []
     for _, r in sources.iterrows():
         X, ghw, prof, _ = _design_matrix((r["mean_age"] - 40) / 10.0)
@@ -116,9 +159,11 @@ def run():
         xidx = [PRED_ORDER.index(nm) + 1 for nm in rep_names]
         gidx = [PRED_ORDER.index(nm) for nm in rep_names]
         rep_logor = np.array([logor[PRED_ORDER.index(nm)] for nm in rep_names])
+        Vsub = _source_cov(X, ghw, prof, prev0[1:], int(r["n"]), int(r["events"]),
+                           logor, xidx)
         src.append(dict(name=r["study"], N=int(r["n"]), events=int(r["events"]),
                         X=X, ghw=ghw, prof=prof, xidx=xidx, gidx=gidx,
-                        rep=rep_logor))
+                        rep=rep_logor, Vsub=Vsub))
 
     K = len(PRED_ORDER)
     coords = {"study": counts["study"].tolist(), "location": LOC_LEVELS,
@@ -161,29 +206,19 @@ def run():
         pm.Binomial("obs_op", n=counts["n_op"].to_numpy(int), p=p_op,
                     observed=counts["events_op"].to_numpy(int), dims="study")
 
-        # ---- source-study IPD estimation-process evidence ----
+        # ---- source-study estimation-process evidence ----
+        # Each source contributes the quadratic (Laplace) approximation of its
+        # logistic log-likelihood: gamma_hat_sub ~ MvNormal(gamma_sub, V_sub),
+        # with V_sub the inverse observed information EVALUATED AT THE ESTIMATE
+        # (constant; precomputed in _source_cov). For canonical-link logistic the
+        # Hessian is -X'WX (independent of the outcomes), so observed = expected
+        # information and this curvature is exactly the study's likelihood
+        # curvature. Putting the sampled gamma inside the covariance instead would
+        # add a spurious log|I(gamma)| term and a funnel -> poor mixing.
         for s in src:
-            X = pt.as_tensor_variable(s["X"])                     # (M,7) const
-            # profile weight * age(GH) weight per row
-            pw = w_prof[s["prof"]] * pt.as_tensor_variable(s["ghw"])   # (M,)
-            alpha_s = pm.Normal(f"alpha_{s['name']}", -2.0, 1.5)
-            eta = alpha_s + X[:, 1:] @ gamma                      # (M,)
-            mu = pm.math.sigmoid(eta)
-            wobs = mu * (1.0 - mu)
-            # marginal outcome rate -> Binomial on reported event count
-            pi_s = pt.sum(pw * mu)
-            pm.Binomial(f"rate_{s['name']}", n=s["N"],
-                        p=pt.clip(pi_s, 1e-6, 1 - 1e-6), observed=s["events"])
-            # expected Fisher information J = N * X^T diag(pw*wobs) X
-            Wrow = pw * wobs
-            J = s["N"] * (X * Wrow[:, None]).T @ X                # (7,7)
-            J = J + 1e-6 * pt.eye(J.shape[0])
-            V = pt.linalg.inv(J)
-            sub = np.array(s["xidx"])
-            V_sub = V[sub][:, sub]
             gamma_sub = gamma[np.array(s["gidx"])]
-            pm.MvNormal(f"or_obs_{s['name']}", mu=gamma_sub, cov=V_sub,
-                        observed=s["rep"])
+            pm.MvNormal(f"or_obs_{s['name']}", mu=gamma_sub,
+                        cov=pt.as_tensor_variable(s["Vsub"]), observed=s["rep"])
 
         pm.Deterministic("OR_treat", pm.math.exp(mu_delta), dims="location")
         pm.Deterministic("baseline_risk_ref", pm.math.sigmoid(base_ref), dims="location")

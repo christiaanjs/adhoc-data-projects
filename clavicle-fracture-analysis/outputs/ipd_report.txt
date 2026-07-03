@@ -1,16 +1,16 @@
 === IPD estimation-process evidence model ===
-Trial counts + source-study Fisher-information measurement model; 1 chains; divergences=0; max R-hat=nan
-  midshaft  treatment OR 0.09 [0.03, 0.19]   reference baseline 4.7%
-  distal    treatment OR 0.09 [0.03, 0.19]   reference baseline 11.6%
+Trial counts + source-study Fisher-information measurement model; 4 chains; divergences=0; max R-hat=1.000
+  midshaft  treatment OR 0.08 [0.03, 0.17]   reference baseline 4.6%
+  distal    treatment OR 0.08 [0.03, 0.20]   reference baseline 9.5%
 Predictor ORs (posterior vs published point estimate):
-  age                    1.17 [0.96, 1.47]  (pub 1.20)
-  female                 1.47 [0.79, 2.59]  (pub 1.50)
-  smoking                3.24 [1.38, 6.85]  (pub 3.76)
-  complete_displacement  2.21 [1.34, 3.79]  (pub 2.30)
-  comminution            1.31 [0.64, 3.20]  (pub 1.75)
-  shortening_gt2cm       1.82 [1.18, 3.92]  (pub 2.00)
+  age                    1.20 [0.97, 1.48]  (pub 1.20)
+  female                 1.47 [0.82, 2.62]  (pub 1.50)
+  smoking                3.53 [1.58, 7.87]  (pub 3.76)
+  complete_displacement  2.21 [1.19, 4.00]  (pub 2.30)
+  comminution            1.67 [0.77, 3.58]  (pub 1.75)
+  shortening_gt2cm       1.95 [1.11, 3.45]  (pub 2.00)
 Strongest gamma correlations induced by the joint estimation model:
-  corr(female, complete_displacement) = +0.46
-  corr(age, shortening_gt2cm) = +0.22
-  corr(comminution, shortening_gt2cm) = -0.20
-  corr(complete_displacement, comminution) = -0.16
+  corr(age, smoking) = +0.03
+  corr(female, comminution) = -0.02
+  corr(female, smoking) = -0.02
+  corr(comminution, shortening_gt2cm) = -0.02
