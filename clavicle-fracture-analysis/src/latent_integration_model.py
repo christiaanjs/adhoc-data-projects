@@ -60,9 +60,10 @@ OUT = os.path.join(ROOT, "outputs")
 AGE_SD_DECADES = 1.3          # assumed population SD of age (~13 y)
 PREV_NEFF = 150               # effective sample size behind published prevalences
 N_GH = 8                      # Gauss-Hermite nodes for the age integral
-# pip's PyTensor has no BLAS, so the many small matmuls in the marginalisation
-# are slow; 2000/1500 gives ample ESS here (R-hat = 1.0) at a sane runtime.
 DRAWS, TUNE, CHAINS, SEED = 2000, 1500, 4, 20240702
+# NUMBA backend: pip's PyTensor lacks BLAS, so the many small matmuls in the
+# covariate marginalisation are slow under the default C backend.
+COMPILE_KWARGS = {"mode": "NUMBA"}
 
 
 def _age_nodes():
@@ -157,7 +158,8 @@ def run():
                          dims="location")
 
         idata = pm.sample(draws=DRAWS, tune=TUNE, chains=CHAINS, cores=CHAINS,
-                          target_accept=0.99, random_seed=SEED, progressbar=False)
+                          target_accept=0.99, random_seed=SEED, progressbar=False,
+                          compile_kwargs=COMPILE_KWARGS)
 
     post = idata.posterior
 

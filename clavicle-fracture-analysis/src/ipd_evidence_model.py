@@ -64,10 +64,12 @@ DATA = os.path.join(ROOT, "data")
 AGE_SD_DECADES = 1.3
 PREV_NEFF = 150
 N_GH = 6
-# The per-step Fisher-information matrix inversion is costly under pip's
-# BLAS-less PyTensor, so keep the sampler modest; this still gives R-hat ~ 1.0.
-DRAWS, TUNE, CHAINS, SEED = 1000, 1000, 4, 20240702
-TARGET_ACCEPT = 0.9
+DRAWS, TUNE, CHAINS, SEED = 1500, 1500, 4, 20240702
+TARGET_ACCEPT = 0.95
+# pip's PyTensor has no BLAS, which makes the per-step Fisher-information matrix
+# inversion painfully slow under the default C backend. The NUMBA backend does
+# its own linear-algebra optimisation (one-time compile, then fast sampling).
+COMPILE_KWARGS = {"mode": "NUMBA"}
 
 
 def _gh():
@@ -196,7 +198,7 @@ def run():
 
         idata = pm.sample(draws=DRAWS, tune=TUNE, chains=CHAINS, cores=CHAINS,
                           target_accept=TARGET_ACCEPT, random_seed=SEED,
-                          progressbar=False)
+                          progressbar=False, compile_kwargs=COMPILE_KWARGS)
 
     post = idata.posterior
 
