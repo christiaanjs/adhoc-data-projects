@@ -66,10 +66,6 @@ PREV_NEFF = 150
 N_GH = 6
 DRAWS, TUNE, CHAINS, SEED = 1500, 1500, 4, 20240702
 TARGET_ACCEPT = 0.95
-# pip's PyTensor has no BLAS, which makes the per-step Fisher-information matrix
-# inversion painfully slow under the default C backend. The NUMBA backend does
-# its own linear-algebra optimisation (one-time compile, then fast sampling).
-COMPILE_KWARGS = {"mode": "NUMBA"}
 
 
 def _gh():
@@ -150,20 +146,16 @@ def run():
         z_study = pm.Normal("z_study", 0.0, 1.0, dims="study")
         delta = mu_delta[loc_idx] + sigma_delta * z_study
 
-        # ---- trial arm counts (exact marginalisation) ----
+        # ---- trial arm counts (exact marginalisation), vectorised over studies ----
         Bg = Bmat @ gamma_bin
-        p_no_list, p_op_list = [], []
-        for i in range(len(counts)):
-            loc = int(loc_idx[i])
-            age_term = gamma_age * study_age_nodes[i]
-            const_no = base_ref[loc] + u[i]
-            const_op = const_no + delta[i]
-            grid_no = Bg[:, None] + age_term[None, :] + const_no
-            grid_op = Bg[:, None] + age_term[None, :] + const_op
-            p_no_list.append(pt.dot(w_prof, pt.dot(pt.sigmoid(grid_no), gh_w)))
-            p_op_list.append(pt.dot(w_prof, pt.dot(pt.sigmoid(grid_op), gh_w)))
-        p_no = pt.clip(pt.stack(p_no_list), 1e-6, 1 - 1e-6)
-        p_op = pt.clip(pt.stack(p_op_list), 1e-6, 1 - 1e-6)
+        age_term = gamma_age * study_age_nodes               # (S,Q)
+        const_no = base_ref[loc_idx] + u                     # (S,)
+        const_op = const_no + delta                          # (S,)
+        grid_no = Bg[None, :, None] + age_term[:, None, :] + const_no[:, None, None]
+        grid_op = Bg[None, :, None] + age_term[:, None, :] + const_op[:, None, None]
+        weight = w_prof[None, :, None] * gh_w[None, None, :]  # (1,32,Q)
+        p_no = pt.clip((pt.sigmoid(grid_no) * weight).sum(axis=(1, 2)), 1e-6, 1 - 1e-6)
+        p_op = pt.clip((pt.sigmoid(grid_op) * weight).sum(axis=(1, 2)), 1e-6, 1 - 1e-6)
         pm.Binomial("obs_no", n=counts["n_nonop"].to_numpy(int), p=p_no,
                     observed=counts["events_nonop"].to_numpy(int), dims="study")
         pm.Binomial("obs_op", n=counts["n_op"].to_numpy(int), p=p_op,
@@ -198,7 +190,7 @@ def run():
 
         idata = pm.sample(draws=DRAWS, tune=TUNE, chains=CHAINS, cores=CHAINS,
                           target_accept=TARGET_ACCEPT, random_seed=SEED,
-                          progressbar=False, compile_kwargs=COMPILE_KWARGS)
+                          progressbar=False)
 
     post = idata.posterior
 

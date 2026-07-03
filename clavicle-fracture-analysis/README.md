@@ -82,10 +82,7 @@ clavicle-fracture-analysis/
 ## Run it
 
 The Bayesian models need PyMC, which conflicts with the system `packaging` on
-some Debian images, so use a virtualenv. The two matrix-heavy models
-(`latent_integration_model`, `ipd_evidence_model`) sample on PyTensor's **NUMBA**
-backend, because pip's PyTensor ships without an optimized BLAS and the default C
-backend is very slow for them (one-time NUMBA compile, then fast sampling).
+some Debian images, so use a virtualenv:
 
 ```bash
 python3 -m venv .venv && . .venv/bin/activate

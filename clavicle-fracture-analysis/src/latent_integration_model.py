@@ -61,9 +61,6 @@ AGE_SD_DECADES = 1.3          # assumed population SD of age (~13 y)
 PREV_NEFF = 150               # effective sample size behind published prevalences
 N_GH = 8                      # Gauss-Hermite nodes for the age integral
 DRAWS, TUNE, CHAINS, SEED = 2000, 1500, 4, 20240702
-# NUMBA backend: pip's PyTensor lacks BLAS, so the many small matmuls in the
-# covariate marginalisation are slow under the default C backend.
-COMPILE_KWARGS = {"mode": "NUMBA"}
 
 
 def _age_nodes():
@@ -135,20 +132,19 @@ def run():
         w = pt.exp(logw)                                    # (32,), sums to 1
         Bg = Bmat @ gamma_bin                               # (32,)
 
-        # Build the exact-marginal arm probabilities study by study.
-        p_no_list, p_op_list = [], []
-        for i in range(len(counts)):
-            loc = int(loc_idx[i])
-            age_term = gamma_age * study_age_nodes[i]        # (Q,) tensor
-            const_no = base_ref[loc] + u[i]
-            const_op = const_no + delta[i]
-            # grid[c,q] = Bg[c] + age_term[q] + const ; expectation = w @ sig @ gh_w
-            grid_no = Bg[:, None] + age_term[None, :] + const_no
-            grid_op = Bg[:, None] + age_term[None, :] + const_op
-            p_no_list.append(pt.dot(w, pt.dot(pt.sigmoid(grid_no), gh_w)))
-            p_op_list.append(pt.dot(w, pt.dot(pt.sigmoid(grid_op), gh_w)))
-        p_no = pt.clip(pt.stack(p_no_list), 1e-6, 1 - 1e-6)
-        p_op = pt.clip(pt.stack(p_op_list), 1e-6, 1 - 1e-6)
+        # Exact-marginal arm probabilities, vectorised over all studies at once
+        # (keeps the graph small so it compiles/runs fast on the C backend).
+        age_term = gamma_age * study_age_nodes               # (S,Q) tensor
+        const_no = base_ref[loc_idx] + u                     # (S,)
+        const_op = const_no + delta                          # (S,)
+        # grid[s,c,q] = Bg[c] + age_term[s,q] + const[s]
+        grid_no = (Bg[None, :, None] + age_term[:, None, :]
+                   + const_no[:, None, None])                # (S,32,Q)
+        grid_op = (Bg[None, :, None] + age_term[:, None, :]
+                   + const_op[:, None, None])
+        weight = w[None, :, None] * gh_w[None, None, :]       # (1,32,Q)
+        p_no = pt.clip((pt.sigmoid(grid_no) * weight).sum(axis=(1, 2)), 1e-6, 1 - 1e-6)
+        p_op = pt.clip((pt.sigmoid(grid_op) * weight).sum(axis=(1, 2)), 1e-6, 1 - 1e-6)
 
         pm.Binomial("obs_no", n=n_no, p=p_no, observed=y_no, dims="study")
         pm.Binomial("obs_op", n=n_op, p=p_op, observed=y_op, dims="study")
@@ -158,8 +154,7 @@ def run():
                          dims="location")
 
         idata = pm.sample(draws=DRAWS, tune=TUNE, chains=CHAINS, cores=CHAINS,
-                          target_accept=0.99, random_seed=SEED, progressbar=False,
-                          compile_kwargs=COMPILE_KWARGS)
+                          target_accept=0.99, random_seed=SEED, progressbar=False)
 
     post = idata.posterior
 
