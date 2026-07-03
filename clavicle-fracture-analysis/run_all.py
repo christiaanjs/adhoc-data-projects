@@ -408,23 +408,40 @@ estimate):
 
 ![OR comparison](../outputs/ipd_or_comparison.png)
 
-Unlike the independent-normal block, this model induces **correlated** predictor
-coefficients (the strongest here is corr({i_corr_pair[0]}, {i_corr_pair[1]}) =
-{i_corr_pair[2]:+.2f}), because they were co-estimated on the same cohort — the
-full correlation matrix is in
-[`outputs/ipd_gamma_correlation.csv`](../outputs/ipd_gamma_correlation.csv). The
-treatment effect and baseline are essentially unchanged (midshaft OR
-{isum.loc['midshaft','OR_treat']:.2f}, reference baseline
-{isum.loc['midshaft','base_risk_ref']*100:.1f}%), as expected — the point of this
-model is a more honest, correlation-aware representation of *predictor*
-uncertainty, which then propagates into individual risk. It is the **default**
-used by `predict.py`. Implemented in
+The covariance `V_s` supplies the *shape* of each cohort's coefficient
+uncertainty — its scale set by the cohort's sample size and outcome rate, and its
+cross-coefficient correlations by the design (full matrix in
+[`outputs/ipd_gamma_correlation.csv`](../outputs/ipd_gamma_correlation.csv)). Here
+those correlations turn out small (|corr| ≤ {abs(i_corr_pair[2]):.2f}), which is
+the *correct* result: with roughly independent covariates the intercept absorbs
+the shared level and the logistic coefficient estimates are nearly uncorrelated.
+The value of this model is therefore not correlation but **honest,
+design-derived uncertainty** — SEs implied by each cohort's size rather than
+taken on faith from a reported CI — plus a correctly specified likelihood.
+
+Two subtleties are worth stating explicitly, because getting them wrong is easy:
+
+- **The covariance is evaluated once, at the published estimate, and held
+  constant.** The MLE's *sampling distribution* does depend on the true γ
+  (`γ̂ ~ MVN(γ, I(γ)⁻¹)`), but the object the joint model needs is each study's
+  *likelihood contribution*, whose quadratic approximation has curvature = the
+  observed information at the estimate (for a canonical-link logistic model
+  observed = expected information, so this is exact). Letting the sampled γ into
+  the covariance instead adds a spurious `½·log|I(γ)|` term and a funnel, which
+  produces degenerate coefficient correlations and poor mixing. Genuine
+  γ-dependence would require the exact IPD likelihood (reconstructing patient
+  records), which the published summaries don't give us.
+- The treatment effect and baseline are essentially unchanged (midshaft OR
+  {isum.loc['midshaft','OR_treat']:.2f}, reference baseline
+  {isum.loc['midshaft','base_risk_ref']*100:.1f}%) — as they should be, since
+  this model only refines *predictor* uncertainty.
+
+It is the **default** used by `predict.py`. Implemented in
 [`src/ipd_evidence_model.py`](../src/ipd_evidence_model.py).
 
-*(The residual approximation is asymptotic normality of the MLE — the same
-assumption behind any published Wald confidence interval — plus using the shared
-latent prevalences for each source cohort's Fisher information, since the cohorts'
-own covariate tables are not published.)*
+*(Residual approximations: asymptotic normality of the MLE — the same assumption
+behind any published Wald CI — and using the shared latent prevalences for each
+cohort's information, since the cohorts' own covariate tables are not published.)*
 
 ---
 

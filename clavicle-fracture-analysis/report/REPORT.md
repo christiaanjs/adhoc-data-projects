@@ -269,8 +269,8 @@ noise into the log-density and degrade NUTS. Clean sampling
 |---|---|---|
 | Treatment OR, midshaft | 0.09 | 0.08 (0.03–0.17) |
 | Treatment OR, distal | 0.10 | 0.08 (0.03–0.20) |
-| Reference-patient baseline, midshaft | 5.6% | **4.5%** (2.4–8.1%) |
-| Reference-patient baseline, distal | 10.5% | **9.5%** (4.7–17.3%) |
+| Reference-patient baseline, midshaft | 5.6% | **4.5%** (2.4–8.2%) |
+| Reference-patient baseline, distal | 10.5% | **9.4%** (4.7–17.3%) |
 
 The exact marginalisation pulls the **reference-patient baseline down** relative
 to the linear offset (midshaft 5.6% →
@@ -285,12 +285,87 @@ prevalences are recovered from the data with proper uncertainty:
 | female                |             0.3  |      0.23 |      0.38 |             0.3  |
 | smoking               |             0.26 |      0.19 |      0.33 |             0.25 |
 | complete_displacement |             0.55 |      0.47 |      0.62 |             0.55 |
-| comminution           |             0.35 |      0.27 |      0.43 |             0.35 |
+| comminution           |             0.35 |      0.28 |      0.43 |             0.35 |
 | shortening_gt2cm      |             0.3  |      0.23 |      0.38 |             0.3  |
 
-This is the most principled of the joint models and is the **default** used by
-`predict.py`. Implemented in
+Implemented in
 [`src/latent_integration_model.py`](../src/latent_integration_model.py).
+
+---
+
+## Part 3d — Modelling how the published odds ratios were estimated
+
+All the models so far feed each published OR in as `logOR_k ~ Normal(gamma_k,
+reported_se_k)`. That (a) trusts the reported standard error, (b) treats the
+coefficients as *independent* even though each source study fitted them jointly,
+and (c) is a Wald approximation detached from the data that produced it. This
+model instead builds a **measurement model of the estimation process**: each
+source cohort fitted a logistic regression to its individual patients, so its
+reported coefficients are the maximum-likelihood estimate, whose sampling
+distribution is
+
+```
+gamma_hat_s ~ MvNormal( gamma , V_s ) ,   V_s = [ N_s · E_x( w(x) x xᵀ ) ]⁻¹
+```
+
+— the inverse *expected Fisher information*. `V_s` is derived from the study's
+**design** (sample size `N_s`, covariate distribution, baseline outcome rate)
+and the shared coefficients, not from reported SEs. It automatically supplies the
+across-coefficient correlations and scales precision with the information the
+study actually had. Each source cohort's overall nonunion count is used as data
+too (`y_s ~ Binomial(N_s, marginal rate)`). Source cohorts (Robinson 2004,
+N=868; Murray 2013, N=200) are in
+[`data/source_studies.csv`](../data/source_studies.csv). Clean sampling
+(**0 divergences, max R-hat = 1.000**).
+
+Predictor ORs under the estimation-process model (posterior vs published point
+estimate):
+
+| predictor             |   OR_posterior |   OR_lo |   OR_hi |   OR_published |
+|:----------------------|---------------:|--------:|--------:|---------------:|
+| age                   |           1.2  |    0.97 |    1.48 |           1.2  |
+| female                |           1.47 |    0.82 |    2.62 |           1.5  |
+| smoking               |           3.53 |    1.58 |    7.87 |           3.76 |
+| complete_displacement |           2.21 |    1.19 |    4    |           2.3  |
+| comminution           |           1.67 |    0.77 |    3.58 |           1.75 |
+| shortening_gt2cm      |           1.95 |    1.11 |    3.45 |           2    |
+
+![OR comparison](../outputs/ipd_or_comparison.png)
+
+The covariance `V_s` supplies the *shape* of each cohort's coefficient
+uncertainty — its scale set by the cohort's sample size and outcome rate, and its
+cross-coefficient correlations by the design (full matrix in
+[`outputs/ipd_gamma_correlation.csv`](../outputs/ipd_gamma_correlation.csv)). Here
+those correlations turn out small (|corr| ≤ 0.03), which is
+the *correct* result: with roughly independent covariates the intercept absorbs
+the shared level and the logistic coefficient estimates are nearly uncorrelated.
+The value of this model is therefore not correlation but **honest,
+design-derived uncertainty** — SEs implied by each cohort's size rather than
+taken on faith from a reported CI — plus a correctly specified likelihood.
+
+Two subtleties are worth stating explicitly, because getting them wrong is easy:
+
+- **The covariance is evaluated once, at the published estimate, and held
+  constant.** The MLE's *sampling distribution* does depend on the true γ
+  (`γ̂ ~ MVN(γ, I(γ)⁻¹)`), but the object the joint model needs is each study's
+  *likelihood contribution*, whose quadratic approximation has curvature = the
+  observed information at the estimate (for a canonical-link logistic model
+  observed = expected information, so this is exact). Letting the sampled γ into
+  the covariance instead adds a spurious `½·log|I(γ)|` term and a funnel, which
+  produces degenerate coefficient correlations and poor mixing. Genuine
+  γ-dependence would require the exact IPD likelihood (reconstructing patient
+  records), which the published summaries don't give us.
+- The treatment effect and baseline are essentially unchanged (midshaft OR
+  0.08, reference baseline
+  4.6%) — as they should be, since
+  this model only refines *predictor* uncertainty.
+
+It is the **default** used by `predict.py`. Implemented in
+[`src/ipd_evidence_model.py`](../src/ipd_evidence_model.py).
+
+*(Residual approximations: asymptotic normality of the MLE — the same assumption
+behind any published Wald CI — and using the shared latent prevalences for each
+cohort's information, since the cohorts' own covariate tables are not published.)*
 
 ---
 
@@ -305,18 +380,18 @@ logit risk_op    = logit risk_nonop + treatment_effect[location]
 ARR = risk_nonop - risk_op ;   NNT = 1 / ARR
 ```
 
-By default these are read straight off the **latent-covariate joint posterior**
-from Part 3c, so baseline, treatment effect and predictor slopes are mutually
-consistent and all uncertainty is propagated together (every number carries a
-95% credible interval). (`predict.py --model unified` or `--model two-stage`
-give cross-checks.)
+By default these are read straight off the **estimation-process joint posterior**
+from Part 3d, so baseline, treatment effect and (correlated) predictor slopes are
+mutually consistent and all uncertainty is propagated together (every number
+carries a 95% credible interval). (`predict.py --model latent | unified |
+two-stage` give cross-checks.)
 
 | patient                                       | nonop risk   | op risk   | ARR   | NNT (95% CrI)   | interpretation                    |
 |:----------------------------------------------|:-------------|:----------|:------|:----------------|:----------------------------------|
-| Young, minimally displaced (midshaft)         | 3%           | 0%        | 3%    | 32 (17-62)      | small absolute benefit (high NNT) |
-| Typical displaced midshaft                    | 10%          | 1%        | 9%    | 12 (7-21)       | moderate absolute benefit         |
-| Older smoker, comminuted+shortened (midshaft) | 73%          | 18%       | 54%   | 2 (1-3)         | large absolute benefit (low NNT)  |
-| Displaced distal (Neer II)                    | 23%          | 2%        | 21%   | 5 (3-9)         | large absolute benefit (low NNT)  |
+| Young, minimally displaced (midshaft)         | 3%           | 0%        | 3%    | 31 (15-72)      | small absolute benefit (high NNT) |
+| Typical displaced midshaft                    | 10%          | 1%        | 9%    | 12 (6-24)       | moderate absolute benefit         |
+| Older smoker, comminuted+shortened (midshaft) | 73%          | 17%       | 53%   | 2 (1-3)         | large absolute benefit (low NNT)  |
+| Displaced distal (Neer II)                    | 23%          | 2%        | 21%   | 5 (3-10)        | large absolute benefit (low NNT)  |
 
 The relative effect of surgery is nearly constant, but the **absolute** benefit
 ranges from trivial (high NNT for a young minimally displaced fracture — surgery
