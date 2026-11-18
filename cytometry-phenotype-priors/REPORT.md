@@ -4,9 +4,9 @@
 - **Biggest gain: soft gating rules.** These are rules on marker levels taken from the publications. Turning them into a rule gate on p(k|x) gives the largest improvement over an unconstrained mixture.
 - **Labels add more.** Combining the rules with one to three labelled reference samples beats the rules alone.
 - **Ordering constraints alone do not help.** Constraining the marker orderings between populations neither keeps a component attached to the population it is meant to be, nor reliably improves Hungarian F1.
-- **Flows: one kind earns its place.** A per-marker monotone flow, which acts as a learned per-sample normalisation, does. RealNVP-style coupling layers do not.
+- **Flows: one kind earns its place on Samusik.** A per-marker monotone flow, which acts as a learned per-sample normalisation, earns its place there. With 3 labelled samples it is the best model: 0.754 test and 0.765 validation macro F1, against FlowSOM's 0.688 and 0.675. RealNVP-style coupling layers do not earn theirs. On Levine, with only 2 samples, the flow results are inconsistent between test and validation.
 - **Rare populations: the priors fail.** On the two rare-population flow sets the priors are a clear negative result, because the automatic thresholds disagree with how the manual gates were drawn (§6).
-- **FlowSOM still matches or beats the unsupervised prior models.** This is on the Weber & Robinson metric, with FlowSOM given k=40 clusters for 14–24 populations. FlowSOM, however, does not name its clusters.
+- **FlowSOM is hard to beat without labels.** On the Weber & Robinson metric, with k=40 clusters for 14–24 populations, it beats every *unsupervised* prior model on Samusik (test and validation) and on Levine validation. On Levine test the best unsupervised prior model edges it, 0.712 vs 0.698, which is within seed spread. Unlike FlowSOM, the prior models name their clusters. Only the label-using models beat FlowSOM clearly.
 
 Numbers: `results/results_table.md` (5 seeds; mean ± sd over seeds of the mean over test samples).
 Figures: `results/figures/`.
@@ -118,7 +118,140 @@ Both main sets are within seed spread of the published value, so the metric and 
 
 ## 5. Results
 
-RESULTS_PLACEHOLDER
+Full tables: `results/results_table.md` and `.csv`. Raw per-run records: `results/runs/*_test.jsonl` (985 runs, 0 failures).
+
+### 5.1 Main table: macro F1 on held-out test samples (mean ± sd over 5 seeds)
+
+| method | priors | labels | Samusik Hungarian | Samusik identity | Levine Hungarian | Levine identity |
+|---|---|---|---|---|---|---|
+| L0 GMM | – | – | 0.486 ± 0.006 | – | 0.522 ± 0.024 | – |
+| L1 t-mixture | – | – | 0.529 ± 0.004 | – | 0.549 ± 0.036 | – |
+| L2 FlowSOM (k=40) | – | – | 0.688 ± 0.007 | – | 0.698 ± 0.029 | – |
+| R rules only (no mixture) | rules | – | 0.559 | 0.557 | 0.592 | 0.563 |
+| L3 t + ordering | order | – | 0.537 ± 0.005 | 0.441 ± 0.008 | 0.643 ± 0.034 | 0.413 ± 0.036 |
+| L3 t + ordering, rank init (no rule info) | order | – | 0.473 ± 0.011 | 0.182 ± 0.017 | 0.596 ± 0.012 | 0.294 ± 0.030 |
+| L4 t + rules | rules | – | 0.604 ± 0.002 | 0.565 ± 0.001 | 0.658 ± 0.008 | 0.596 ± 0.007 |
+| L4 t + both | both | – | 0.613 ± 0.003 | 0.574 ± 0.002 | 0.652 ± 0.008 | 0.592 ± 0.008 |
+| L5 t, neither, 3 refs | – | 3 | 0.670 ± 0.002 | 0.665 ± 0.003 | n/a | n/a |
+| L5 t, order, 3 refs | order | 3 | 0.671 ± 0.001 | 0.667 ± 0.002 | n/a | n/a |
+| L5 t, rules, 3 refs | rules | 3 | 0.692 ± 0.002 | 0.686 ± 0.002 | n/a | n/a |
+| L5 t, both, 1 ref | both | 1 | 0.688 ± 0.003 | 0.681 ± 0.003 | 0.699 ± 0.041 | 0.667 ± 0.051 |
+| L5 t, both, 3 refs | both | 3 | 0.701 ± 0.002 | 0.694 ± 0.002 | n/a | n/a |
+| L6 marginal+coupling flow, neither | – | – | 0.582 ± 0.007 | – | 0.534 ± 0.033 | – |
+| L6 marginal+coupling flow, order | order | – | 0.552 ± 0.007 | 0.431 ± 0.019 | 0.498 ± 0.022 | 0.282 ± 0.031 |
+| L6 marginal+coupling flow, rules | rules | – | 0.623 ± 0.003 | 0.592 ± 0.003 | 0.626 ± 0.034 | 0.529 ± 0.013 |
+| L6 marginal+coupling flow, both | both | – | 0.628 ± 0.004 | 0.597 ± 0.004 | 0.614 ± 0.027 | 0.523 ± 0.011 |
+| L6 marginal flow only, both | both | – | 0.637 ± 0.005 | 0.609 ± 0.004 | 0.699 ± 0.016 | 0.676 ± 0.018 |
+| *3b* marginal flow, neither | – | – | 0.591 ± 0.003 | – | 0.561 ± 0.027 | – |
+| *3b* marginal flow, order | order | – | 0.563 ± 0.007 | 0.449 ± 0.021 | 0.584 ± 0.009 | 0.420 ± 0.049 |
+| *3b* marginal flow, rules | rules | – | 0.627 ± 0.004 | 0.599 ± 0.004 | 0.703 ± 0.013 | 0.681 ± 0.012 |
+| *3b* marginal flow + t kernel, both | both | – | 0.656 ± 0.002 | 0.617 ± 0.002 | **0.712 ± 0.013** | 0.689 ± 0.011 |
+| *3b* marginal flow, both, 1 ref | both | 1 | 0.738 ± 0.002 | 0.734 ± 0.002 | 0.703 ± 0.022 | **0.702 ± 0.021** |
+| *3b* marginal flow, both, 3 refs | both | 3 | **0.754 ± 0.002** | **0.752 ± 0.001** | n/a | n/a |
+
+Notes on the table:
+- **Two metrics.** Hungarian F1 is Weber & Robinson's metric, in which each cluster is matched to its best population after the fact. Identity F1 needs no matching: component k is scored as population k, which is how a model would actually be used to name cells.
+- **Missing cells.** Levine has only one reference sample (H1), so its 3-reference cells are n/a.
+- **Post-hoc rows.** Rows marked *3b* were added after seeing the 3a test results; their validation scores are in §5.3.
+- **Context.** The best method in Weber & Robinson on Samusik_all (FlowSOM, 0.702 published) sits between the unsupervised prior models and the semi-supervised ones.
+
+### 5.2 Answers to the Phase-3 questions
+
+**Do priors help, and where?** Yes, on the multi-sample CyTOF sets. Against the matched model without priors:
+
+| comparison | Samusik Hungarian | Samusik identity | Levine Hungarian | Levine identity |
+|---|---|---|---|---|
+| t-mixture (L1 → L4 both) | 0.529 → 0.613 | — | 0.549 → 0.652 | — |
+| marginal flow (neither → both) | 0.591 → 0.637 | — | 0.561 → 0.699 | — |
+| 3 labelled refs (neither → both) | 0.670 → 0.701 | 0.665 → 0.694 | — | — |
+
+Priors also give identity F1 without matching, which unsupervised baselines cannot provide at all: 0.57–0.61 on Samusik and 0.59–0.69 on Levine.
+- **Where they help.** The gain is concentrated in mid-abundance lineage populations whose rules are crisp: pDCs, CD4/CD8 T, NK, eosinophils, IgD/IgM B subsets, and MEP. See `figures/per_population_f1_*.png`.
+- **Where they don't.** They do not help, and sometimes hurt, where a rule needs an intermediate level or a parent-relative gate:
+  - Intermediate monocytes (F1 0.47 with rules vs 0.60 for L1)
+  - Classical monocytes in L4
+  - HSC (0 for every method except FlowSOM 0.07)
+  - CLP, γδ T, and pro-B
+- **Rare sets: negative** (§6).
+
+**Which prior type helps most?** The rules, by a wide margin:
+- **Rules alone.** They give almost all of the gain:
+
+  | comparison | Samusik | Levine |
+  |---|---|---|
+  | L4_rules vs L1_t | +0.075 | +0.109 |
+  | L4_both vs L4_rules (ordering on top) | +0.009 | −0.006 |
+  | t-mixture + 3 refs: L5_rules_ref3 vs L5_neither_ref3 | +0.022 | — |
+  | t-mixture + 3 refs: L5_order_ref3 vs L5_neither_ref3 | +0.001 | — |
+
+- **Ordering alone.** It gives at best a modest Hungarian gain (Levine L3 0.643 vs 0.549, but this uses rule-based initialisation). With the clean rank initialisation it is *worse* than no prior on Samusik (0.473). Under any flow it hurts (L6_order < L6_neither; *3b* marginal order < neither).
+- **Identity F1 under ordering only stays low (0.41–0.45).** The ordering bounds the component means relative to one another, but it does not stop components from swapping populations or absorbing unknown cells.
+- **Labelled samples are worth more than either prior without labels.** One reference sample beats every unsupervised model. The priors still add +0.03 on top of three labelled samples.
+
+**Is the flow worth its complexity?** On Samusik, the *per-marker monotone* flow is; the coupling layers are not. On Levine the evidence is mixed (§5.3).
+- **Marginal monotone flow.** It preserves every marker ordering by construction and acts as a learned per-sample normalisation of each channel. Swapping it in for no flow:
+
+  | setting | Samusik (no flow → marginal flow) | Levine (no flow → marginal flow) |
+  |---|---|---|
+  | both priors, no labels | L4_both 0.613 → 0.656 (t kernel) | 0.652 → 0.712 |
+  | both priors, 3 refs | L5_both_ref3 0.701 → 0.754 | — |
+  | identity F1, 3 refs | 0.694 → 0.752 | — |
+
+  That makes it the best model on Samusik, beating FlowSOM by 0.07 on test and 0.09 on validation with no matching needed. The cost is about 1.2× the t-mixture runtime. On Levine the test gain (0.652 → 0.712) does not reproduce on the validation sample H1 (0.639 → 0.659).
+- **Coupling layers (RealNVP-style).** Adding them on top of the marginal flow lowers F1 on Samusik test and validation (0.637 → 0.628; 0.661 → 0.651) and on Levine test (0.699 → 0.614). On Levine H1, however, they raise it (0.639 → 0.658). A plausible mechanism for the losses is that coupling layers let the latent space reshape freely, which undoes the alignment between components and marker levels that the rules rely on. They give no consistent benefit for their cost.
+- **Number of unknown components.** It hardly matters on the multi-sample sets: K_u = 0, 1 or 6 gives 0.621, 0.627 and 0.628 on Samusik. On the rare sets, however, K_u = 0 or 1 collapses the model (Mosmann ECE 1.0).
+
+**How often are orderings violated on held-out samples?**
+- **By the expert gates.** Almost never (§2): 0 of 191 edges on Samusik 06–09, 1 of 191 on 10 (a 0.04 near-tie), and 0 of 83 on Levine H2. The encoded orderings are therefore correct, but also mostly *easy*: the edges join populations already well separated on that marker, which is why the ordering adds little information.
+- **By model clusters.** Measured on data-space medians of the Hungarian-matched clusters:
+
+  | model type | violation rate |
+  |---|---|
+  | unconstrained mixtures | 5–9% (L0 6.9/8.9%, L1 6.7/5.1%, L6_neither 7.4/4.8%) |
+  | prior models | 0.2–3% |
+  | FlowSOM | 2.8% / 0.2% |
+  | best model (marginal flow, both, refs) | 0.9% (Samusik) / 0.2% (Levine) |
+
+  Violations by prior models are not zero, even though the means are ordered by construction. Data-space medians of the cells assigned to a component differ from its mean in latent space, and unknown components can take a population's cells.
+
+### 5.3 Validation check of the post-hoc (3b) variants
+The marginal-flow variants were chosen after the 3a *test* results showed that L6_both_marginal beat the coupling flow. That makes their test scores optimistic by construction. To check them, the key methods were re-run on the **validation samples only** (`results/runs/*_val.jsonl`):
+- Samusik: samples 04 and 05, with references 01–03.
+- Levine: H1. Methods that need references cannot be run there, because H1 *is* the reference.
+
+| method | Samusik val Hungarian | Samusik val identity | Levine H1 Hungarian | Levine H1 identity |
+|---|---|---|---|---|
+| L2 FlowSOM | 0.675 ± 0.004 | – | **0.728 ± 0.043** | – |
+| L4 t + both | 0.636 ± 0.003 | 0.579 | 0.639 ± 0.010 | 0.601 |
+| L6 marginal+coupling, both | 0.651 ± 0.006 | 0.610 | 0.658 ± 0.017 | 0.621 |
+| L6 marginal only, both | 0.661 ± 0.006 | 0.624 | 0.639 ± 0.032 | 0.601 |
+| *3b* marginal flow, rules | 0.651 ± 0.008 | 0.615 | 0.644 ± 0.029 | 0.605 |
+| *3b* marginal flow + t, both | 0.672 ± 0.003 | 0.628 | 0.659 ± 0.002 | 0.620 |
+| L5 t, both, 3 refs | 0.711 ± 0.004 | 0.703 | n/a | n/a |
+| *3b* marginal flow, both, 3 refs | **0.765 ± 0.002** | **0.759** | n/a | n/a |
+
+What the validation check shows:
+- **Samusik: the ranking reproduces.** The marginal flow with both priors and 3 references is best by +0.05 over the same model without the flow, and beats FlowSOM by 0.09. The marginal flow also beats the coupling flow (0.661 vs 0.651). So the main Samusik conclusion is not an artefact of choosing the variant on the test set.
+- **Levine: it does not reproduce.** On H1, adding a flow helps only about +0.02 and the coupling flow is as good as the marginal one. FlowSOM is best there (0.728).
+- **Levine therefore supports only two conclusions:** priors beat an unconstrained mixture, and labels help. The test-set ranking among flow variants on Levine (marginal ≫ coupling) is one sample's worth of evidence and is contradicted by the other sample.
+
+### 5.4 Calibration, runtime, memory
+- **Calibration** (`figures/calibration.png`, gated cells):
+  - The rules-only classifier is the best calibrated (ECE 0.06 / 0.03) and is slightly *under*-confident on Samusik.
+  - All mixtures are over-confident. Without labels they are badly so: L3 ECE 0.56–0.61, L4 0.32–0.40.
+  - Labels and the marginal flow fix most of this: marginal flow + both + 3 refs has ECE 0.042, and Levine with 1 ref 0.068.
+  - Probabilities from unsupervised prior mixtures should not be read as gate confidence.
+- **Runtime** is per sample, single CPU thread, about 80k cells for Samusik and 74k for Levine H2:
+
+  | method | runtime per sample |
+  |---|---|
+  | FlowSOM | 7–9 s |
+  | rules classifier | 10 s |
+  | torch mixtures | 40–125 s (400 minibatch steps) |
+  | sklearn GMM, Samusik (20k-cell fit + predict) | 311 s |
+
+- **Memory.** Peak RSS per worker was 0.9–1.8 GB for every method. This is dominated by holding the whole dataset in each worker, so it does not discriminate between methods.
+
 
 ## 6. Negative results and where the data pushed back
 

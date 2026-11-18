@@ -89,3 +89,69 @@ Samusik_all X_marg_rules 05 1 hung=0.6643979566964586 id=0.6234452439994663 rare
 Samusik_all X_marg_rules 05 2 hung=0.6676188209773075 id=0.626322543969239 rare=None 96s
 Samusik_all X_marg_rules 05 3 hung=0.6631825045302054 id=0.6250485719903973 rare=None 87s
 Samusik_all X_marg_rules 05 4 hung=0.6309731097534764 id=0.597211141515952 rare=None 95s
+Samusik_all X_marg_both_ref3 04 1 hung=0.7572552407846627 id=0.7519866769133275 rare=None 144s
+Samusik_all X_marg_both_ref3 04 0 hung=0.7579181942145853 id=0.752566411867918 rare=None 157s
+Samusik_all X_marg_both_ref3 04 2 hung=0.7503998697004138 id=0.747379481932637 rare=None 140s
+Samusik_all X_marg_both_ref3 04 3 hung=0.7518343476563937 id=0.7469519737025255 rare=None 140s
+Samusik_all X_marg_both_ref3 04 4 hung=0.7547192265932221 id=0.7545296841871916 rare=None 144s
+Samusik_all X_marg_both_ref3 05 0 hung=0.7687673282191753 id=0.7645566824354958 rare=None 141s
+Samusik_all X_marg_both_ref3 05 1 hung=0.7742209781682664 id=0.7656557207890309 rare=None 138s
+Samusik_all X_marg_both_ref3 05 2 hung=0.774872474839284 id=0.7714002526170617 rare=None 139s
+Samusik_all X_marg_t_both 04 0 hung=0.6684433367960608 id=0.6257500423206235 rare=None 74s
+Samusik_all X_marg_t_both 04 1 hung=0.6687293062858669 id=0.6219154789043319 rare=None 70s
+Samusik_all X_marg_both_ref3 05 3 hung=0.7836700039875888 id=0.7713114662838917 rare=None 142s
+Samusik_all X_marg_both_ref3 05 4 hung=0.7716699956871866 id=0.7652625604503182 rare=None 146s
+Samusik_all X_marg_t_both 04 2 hung=0.6762998404117077 id=0.6225217111702351 rare=None 71s
+Samusik_all X_marg_t_both 04 3 hung=0.6661493304087197 id=0.624234137202678 rare=None 76s
+Samusik_all X_marg_t_both 04 4 hung=0.6673102597918349 id=0.6286438421361785 rare=None 72s
+Samusik_all X_marg_t_both 05 0 hung=0.6754878780459833 id=0.6317024002789428 rare=None 68s
+Samusik_all X_marg_t_both 05 1 hung=0.6722840538754357 id=0.6307152773691037 rare=None 69s
+Samusik_all X_marg_t_both 05 2 hung=0.678282985268242 id=0.6343585296125719 rare=None 64s
+Samusik_all X_marg_t_both 05 3 hung=0.6737130739137681 id=0.6338589400345268 rare=None 65s
+Samusik_all X_marg_t_both 05 4 hung=0.6745708825159721 id=0.6298676385969515 rare=None 65s
+30 jobs
+2026-11-18 08:19:46.454 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 08:19:46.455 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 08:19:46.752 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 08:19:46.752 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 08:19:46.826 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 08:19:46.826 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 08:19:46.968 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 08:19:46.969 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 08:19:58.979 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 08:19:59.245 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 08:19:59.261 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 08:19:59.745 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Levine_32dim L2_flowsom H1 3 hung=0.6829629142869799 id=None rare=None 15s
+Levine_32dim L2_flowsom H1 1 hung=0.7640699447121072 id=None rare=None 15s
+2026-11-18 08:20:00.452 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 08:20:00.453 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Levine_32dim L2_flowsom H1 2 hung=0.6850783780173745 id=None rare=None 15s
+Levine_32dim L2_flowsom H1 0 hung=0.7304620128577726 id=None rare=None 16s
+2026-11-18 08:20:12.871 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Levine_32dim L2_flowsom H1 4 hung=0.7750680055804591 id=None rare=None 14s
+Levine_32dim L4_both H1 0 hung=0.6552901175887628 id=0.6172479866780612 rare=None 36s
+Levine_32dim L4_both H1 1 hung=0.6301995240793464 id=0.5926001318453363 rare=None 36s
+Levine_32dim L4_both H1 2 hung=0.6369784633394165 id=0.598871718783158 rare=None 37s
+Levine_32dim L4_both H1 3 hung=0.631607244285908 id=0.5935069554464742 rare=None 34s
+Levine_32dim L4_both H1 4 hung=0.6388010985061596 id=0.600800542450027 rare=None 36s
+Levine_32dim L6_both H1 1 hung=0.6588269880706689 id=0.6212333103342829 rare=None 61s
+Levine_32dim L6_both H1 0 hung=0.6692591270742646 id=0.6300628588038002 rare=None 67s
+Levine_32dim L6_both H1 2 hung=0.6592080535129254 id=0.6221605388248446 rare=None 63s
+Levine_32dim L6_both H1 3 hung=0.6303521558638181 id=0.5923992353899955 rare=None 66s
+Levine_32dim L6_both_marginal H1 0 hung=0.679053874393389 id=0.6408557577129999 rare=None 52s
+Levine_32dim L6_both H1 4 hung=0.6734909529480085 id=0.6367209220045627 rare=None 64s
+Levine_32dim L6_both_marginal H1 1 hung=0.6529280301547631 id=0.6147078063041705 rare=None 53s
+Levine_32dim L6_both_marginal H1 2 hung=0.6481326674173967 id=0.6096664113622554 rare=None 51s
+Levine_32dim L6_both_marginal H1 3 hung=0.6021676292623525 id=0.5640283433413068 rare=None 51s
+Levine_32dim X_marg_rules H1 0 hung=0.6768585378766898 id=0.638574673551544 rare=None 49s
+Levine_32dim L6_both_marginal H1 4 hung=0.6116502835914536 id=0.5736197183811871 rare=None 52s
+Levine_32dim X_marg_rules H1 1 hung=0.6542613522812019 id=0.6158637684668248 rare=None 52s
+Levine_32dim X_marg_rules H1 2 hung=0.6496483269926686 id=0.611047214242607 rare=None 52s
+Levine_32dim X_marg_rules H1 3 hung=0.5971641341820019 id=0.5589908077065727 rare=None 49s
+Levine_32dim X_marg_rules H1 4 hung=0.6399250390086701 id=0.60183409440227 rare=None 51s
+Levine_32dim X_marg_t_both H1 0 hung=0.657931370089833 id=0.6192504246833953 rare=None 41s
+Levine_32dim X_marg_t_both H1 1 hung=0.6598636615006022 id=0.6213459594095062 rare=None 42s
+Levine_32dim X_marg_t_both H1 2 hung=0.6605334590141941 id=0.6217362708225423 rare=None 41s
+Levine_32dim X_marg_t_both H1 3 hung=0.6549919072787341 id=0.6160660161439416 rare=None 43s
+Levine_32dim X_marg_t_both H1 4 hung=0.6593377810111862 id=0.6207990189086626 rare=None 39s
