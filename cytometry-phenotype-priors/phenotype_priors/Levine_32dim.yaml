@@ -1,0 +1,35 @@
+# Phenotype prior for Levine_32dim (human bone marrow, CyTOF, 32 markers, asinh(x/5)).
+# PROVENANCE KEYS
+#  name     : population label as published with the dataset (Levine 2015 / FR-FCM-ZZPH), e.g.
+#             "CD34+CD38lo HSCs" states CD34 pos, CD38 lo(=dim).
+#  lev15_txt: Levine et al. Cell 2015 (PMC4508757) main text: "CD34+/CD45low blasts" (diagnostic
+#             definition of immature cells; used for CD45 dim on CD34+ cells).
+#  canonical: standard human immunophenotypes NOT verified against the dataset's own gating figure
+#             (Levine 2015 Supplemental gating PDF not retrievable: bot wall). Reference panels:
+#             Maecker, McCoy & Nussenblatt, Nat Rev Immunol 12:191 (2012) (HIPC standard phenotypes:
+#             T CD3+CD4+/CD8+, B CD19+CD20+, NK CD3-CD56+CD16+/-, monocytes CD14+, pDC CD123+HLA-DR+,
+#             basophils CD123+HLA-DR-); Bendall et al. Science 2011 (BM gating of the same lab).
+#  inferred: true => at least one level from `canonical`.
+dataset: Levine_32dim
+levels: [neg, dim, pos, bright]
+hierarchy:
+  T:        {parent: null, markers: {CD3: pos, CD19: neg, CD14: neg}, citation: [canonical], inferred: true}
+  B:        {parent: null, markers: {CD19: pos, CD3: neg}, citation: [canonical], inferred: true}
+  nonBT:    {parent: null, markers: {CD3: neg, CD19: neg}, citation: [canonical], inferred: true}
+  CD34pos:  {parent: nonBT, markers: {CD34: pos, CD45: dim}, citation: [name, lev15_txt]}
+populations:
+  CD4_T_cells:            {parent: T, markers: {CD4: pos, CD8: neg}, citation: [name, canonical], inferred: true}
+  CD8_T_cells:            {parent: T, markers: {CD8: pos, CD4: neg}, citation: [name, canonical], inferred: true}
+  CD16-_NK_cells:         {parent: nonBT, markers: {CD16: neg, CD7: pos, CD14: neg}, citation: [name, canonical], inferred: true}
+  CD16+_NK_cells:         {parent: nonBT, markers: {CD16: pos, CD7: pos, CD14: neg}, citation: [name, canonical], inferred: true}
+  Mature_B_cells:         {parent: B, markers: {CD20: pos, CD34: neg}, citation: [canonical], inferred: true}
+  Pre_B_cells:            {parent: B, markers: {CD20: neg, CD34: neg}, citation: [canonical], inferred: true}
+  Pro_B_cells:            {parent: B, markers: {CD34: pos, CD20: neg}, citation: [canonical], inferred: true}
+  Plasma_B_cells:         {parent: null, markers: {CD3: neg, CD38: bright, CD20: neg}, citation: [canonical], inferred: true}
+  Monocytes:              {parent: nonBT, markers: {CD14: pos, CD33: pos, CD64: pos, CD11b: pos, HLA-DR: pos}, citation: [canonical], inferred: true}
+  pDCs:                   {parent: nonBT, markers: {CD123: pos, HLA-DR: pos, CD11c: neg, CD14: neg}, citation: [canonical], inferred: true}
+  Basophils:              {parent: nonBT, markers: {CD123: pos, HLA-DR: neg, CD14: neg}, citation: [canonical], inferred: true}
+  CD34+CD38lo_HSCs:       {parent: CD34pos, markers: {CD38: dim}, citation: [name]}
+  CD34+CD38+CD123-_HSPCs: {parent: CD34pos, markers: {CD38: pos, CD123: neg}, citation: [name]}
+  CD34+CD38+CD123+_HSPCs: {parent: CD34pos, markers: {CD38: pos, CD123: pos}, citation: [name]}
+orderings: []

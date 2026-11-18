@@ -1,0 +1,97 @@
+[
+ {
+  "name": "Levine_32dim",
+  "n_cells": 265627,
+  "n_labelled": 104184,
+  "n_samples": 2,
+  "n_markers": 32,
+  "n_populations": 14,
+  "cofactor": 5.0,
+  "multi_label": true,
+  "technology": "mass cytometry (CyTOF)",
+  "publication": "Levine JH et al. Cell 162:184-197 (2015) doi:10.1016/j.cell.2015.05.047",
+  "labels": "manual gating by the original authors (14 populations); 'unassigned' cells not gated",
+  "source": "FlowRepository FR-FCM-ZZPH via Bioconductor HDCytoData (ExperimentHub EH2240)",
+  "cells_per_sample": {
+   "H1": 191351,
+   "H2": 74276
+  }
+ },
+ {
+  "name": "Levine_13dim",
+  "n_cells": 167044,
+  "n_labelled": 81747,
+  "n_samples": 1,
+  "n_markers": 13,
+  "n_populations": 24,
+  "cofactor": 5.0,
+  "multi_label": true,
+  "technology": "mass cytometry (CyTOF)",
+  "publication": "Bendall SC et al. Science 332:687-696 (2011) doi:10.1126/science.1198704 (benchmark set in Levine 2015)",
+  "labels": "manual gating (24 populations) from Bendall 2011",
+  "source": "FR-FCM-ZZPH via HDCytoData (EH2242)",
+  "cells_per_sample": {
+   "S1": 167044
+  }
+ },
+ {
+  "name": "Samusik_all",
+  "n_cells": 841644,
+  "n_labelled": 514386,
+  "n_samples": 10,
+  "n_markers": 39,
+  "n_populations": 24,
+  "cofactor": 5.0,
+  "multi_label": true,
+  "technology": "mass cytometry (CyTOF)",
+  "publication": "Samusik N et al. Nat Methods 13:493-496 (2016) doi:10.1038/nmeth.3863",
+  "labels": "consensus of 3 experts' hand-gating, 24 populations, 10 replicate mouse BM samples",
+  "source": "FR-FCM-ZZPH via HDCytoData (EH2246)",
+  "cells_per_sample": {
+   "01": 86864,
+   "02": 87772,
+   "03": 84556,
+   "04": 80713,
+   "05": 84610,
+   "06": 77282,
+   "07": 95087,
+   "08": 85741,
+   "09": 83506,
+   "10": 75513
+  }
+ },
+ {
+  "name": "Nilsson_rare",
+  "n_cells": 44140,
+  "n_labelled": 358,
+  "n_samples": 1,
+  "n_markers": 13,
+  "n_populations": 1,
+  "cofactor": 150.0,
+  "multi_label": false,
+  "technology": "flow cytometry",
+  "publication": "Rundberg Nilsson A et al. Cytometry A 83:721-727 (2013) doi:10.1002/cyto.a.22324",
+  "labels": "HSC gate re-drawn by Weber & Robinson 2016 in Cytobank following Nilsson 2013 Fig 2",
+  "source": "FR-FCM-ZZPH via HDCytoData (EH2248)",
+  "cells_per_sample": {
+   "S1": 44140
+  }
+ },
+ {
+  "name": "Mosmann_rare",
+  "n_cells": 396460,
+  "n_labelled": 109,
+  "n_samples": 1,
+  "n_markers": 14,
+  "n_populations": 1,
+  "cofactor": 150.0,
+  "multi_label": false,
+  "technology": "flow cytometry",
+  "publication": "Mosmann TR et al. Cytometry A 85:422-433 (2014) doi:10.1002/cyto.a.22445",
+  "labels": "activated memory CD4 T cells (IFNg+TNFa+) re-gated by Weber & Robinson 2016 following Mosmann 2014 Fig 4A",
+  "source": "FR-FCM-ZZPH via HDCytoData (EH2250)",
+  "cells_per_sample": {
+   "S1": 396460
+  }
+ }
+]

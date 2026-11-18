@@ -1,0 +1,58 @@
+# Phenotype prior for Samusik_all (mouse bone marrow, CyTOF, 39 markers, asinh(x/5)).
+# Levels: neg < dim < pos < bright ; markers not listed = unspecified.
+# Children inherit their parent's marker levels (hierarchy), child entries override.
+#
+# PROVENANCE KEYS
+#  name      : the population label itself as published with the dataset (FR-FCM-ZZPH / HDCytoData),
+#              e.g. "IgD- IgMpos B cells" states IgD neg, IgM pos.
+#  sam16_txt : Samusik et al. 2016 Nat Methods 13:493, main text (PMC4896314), verbatim:
+#              "MPP population is CD19 < 0.53, CD3 < 1.52, CD49b < 1.89, Sca1 > 2.62, 120g8 < 1.70,
+#               CD27 > 1.62, CD34 > 1.72, cKit > 1.50" (asinh(x/5) scale)
+#  sam16_f2a : Samusik 2016 Fig. 2a, Divisive Marker Tree of hand-gated populations (read from the PMC
+#              figure image; low resolution, only the large node labels are legible):
+#              root split CD19<0.53 / >0.53 (B cells side); CD3<1.52 / >1.52 (T cells); CD49b>1.89 branch
+#              holds NK cells & Basophils; Sca1>2.69 branch holds CLP, HSC/MPP, pDC; CD16_32>2.11 branch
+#              towards GMP/monocytes; Ly6C>1.99 & CD11b>1.70 -> Classical Monocytes; Ly6C<1.23 ->
+#              Intermediate monocytes; SiglecF>1.72 -> Eosinophils; IgM/IgD splits inside B cells.
+#  sam16_f2b : Samusik 2016 Fig. 2b biaxials (pDC: 120g8 high; Plasma cells: MHCII low vs IgM).
+#  canonical : textbook mouse haematopoiesis definitions NOT verified against this dataset's gating
+#              figure (Samusik 2016 Supp. Fig. 5 could not be retrieved: publisher bot wall).
+#              References: Akashi et al. Nature 2000 (CMP/GMP/MEP); Kondo et al. Cell 1997 (CLP);
+#              Kiel et al. Cell 2005 (SLAM HSC); Hardy et al. J Exp Med 1991 (B-cell fractions A-C);
+#              Geissmann et al. Immunity 2003 (monocyte subsets).
+#  inferred: true  => at least one marker level came from `canonical` rather than name/publication.
+dataset: Samusik_all
+levels: [neg, dim, pos, bright]
+hierarchy:
+  B_lineage:   {parent: null, markers: {CD19: pos, CD3: neg}, citation: [sam16_f2a]}
+  T_lineage:   {parent: null, markers: {CD3: pos, CD19: neg}, citation: [sam16_f2a]}
+  nonBT:       {parent: null, markers: {CD3: neg, CD19: neg}, citation: [sam16_f2a]}
+  LinNeg_prog: {parent: nonBT, markers: {CD11b: neg, cKit: pos}, citation: [canonical], inferred: true}
+populations:
+  IgDpos IgMpos B cells:   {parent: B_lineage, markers: {IgD: pos, IgM: pos, B220: pos}, citation: [name, sam16_f2a, canonical], inferred: true}
+  IgD- IgMpos B cells:     {parent: B_lineage, markers: {IgD: neg, IgM: pos, B220: pos}, citation: [name, sam16_f2a, canonical], inferred: true}
+  IgM- IgD- B-cells:       {parent: B_lineage, markers: {IgD: neg, IgM: neg}, citation: [name, sam16_f2a]}
+  B-cell Frac A-C (pro-B cells): {parent: null, markers: {CD3: neg, B220: pos, CD43: pos, IgM: neg, IgD: neg}, citation: [name, canonical], inferred: true,
+                            note: "Hardy fraction A is CD19-, B/C CD19+, so CD19 left unspecified"}
+  Plasma Cells:            {parent: null, markers: {CD3: neg, CD138: pos, MHCII: neg}, citation: [sam16_f2b, canonical], inferred: true}
+  CD4 T cells:             {parent: T_lineage, markers: {TCRb: pos, CD4: pos, CD8: neg, TCRgd: neg, NKp46: neg}, citation: [name, canonical], inferred: true}
+  CD8 T cells:             {parent: T_lineage, markers: {TCRb: pos, CD8: pos, CD4: neg, TCRgd: neg, NKp46: neg}, citation: [name, canonical], inferred: true}
+  gd T cells:              {parent: T_lineage, markers: {TCRgd: pos, TCRb: neg}, citation: [name]}
+  NKT cells:               {parent: T_lineage, markers: {TCRb: pos, NKp46: pos}, citation: [name, canonical], inferred: true}
+  NK cells:                {parent: nonBT, markers: {NKp46: pos, CD49b: pos}, citation: [sam16_f2a, canonical], inferred: true}
+  Basophils:               {parent: nonBT, markers: {FceR1a: pos, CD49b: pos, cKit: neg}, citation: [sam16_f2a, canonical], inferred: true}
+  Eosinophils:             {parent: nonBT, markers: {SiglecF: pos, CD11b: pos}, citation: [sam16_f2a]}
+  Classical Monocytes:     {parent: nonBT, markers: {CD11b: pos, Ly6C: pos, SiglecF: neg, CD115: pos}, citation: [sam16_f2a, canonical], inferred: true}
+  Intermediate Monocytes:  {parent: nonBT, markers: {CD11b: pos, Ly6C: dim, SiglecF: neg, CD115: pos}, citation: [sam16_f2a, canonical], inferred: true}
+  Non-Classical Monocytes: {parent: nonBT, markers: {CD11b: pos, Ly6C: neg, CD115: pos}, citation: [canonical], inferred: true}
+  Macrophages:             {parent: nonBT, markers: {F480: pos, CD64: pos}, citation: [canonical], inferred: true}
+  mDCs:                    {parent: nonBT, markers: {CD11c: pos, MHCII: pos, 120g8: neg}, citation: [canonical], inferred: true}
+  pDCs:                    {parent: nonBT, markers: {120g8: pos, B220: pos}, citation: [sam16_f2b, canonical], inferred: true}
+  HSC:                     {parent: LinNeg_prog, markers: {Sca1: pos, CD150: pos, CD34: neg}, citation: [sam16_f2a, canonical], inferred: true}
+  MPP:                     {parent: LinNeg_prog, markers: {CD49b: neg, Sca1: pos, 120g8: neg, CD27: pos, CD34: pos}, citation: [sam16_txt]}
+  CLP:                     {parent: nonBT, markers: {CD11b: neg, Sca1: dim, cKit: dim}, citation: [sam16_f2a, canonical], inferred: true}
+  CMP:                     {parent: LinNeg_prog, markers: {Sca1: neg, CD34: pos, CD16_32: dim}, citation: [canonical], inferred: true}
+  GMP:                     {parent: LinNeg_prog, markers: {Sca1: neg, CD34: pos, CD16_32: pos}, citation: [sam16_f2a, canonical], inferred: true}
+  MEP:                     {parent: LinNeg_prog, markers: {Sca1: neg, CD34: neg, CD16_32: neg}, citation: [canonical], inferred: true}
+# Explicit pairwise orderings beyond those implied by levels (marker: [lower, higher]).
+orderings: []
