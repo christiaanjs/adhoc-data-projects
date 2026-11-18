@@ -1,0 +1,256 @@
+700 jobs
+Levine_32dim L4_rules H2 1 hung=0.6682725559582687 id=0.6035250967985079 rare=None 73s
+Levine_32dim L4_rules H2 0 hung=0.6589337541246136 id=0.6030199104009112 rare=None 73s
+Levine_32dim L4_rules H2 2 hung=0.6630688275154327 id=0.5983614866518908 rare=None 73s
+Levine_32dim L4_rules H2 3 hung=0.645472982947257 id=0.5865420538825219 rare=None 74s
+Levine_32dim L4_rules H2 4 hung=0.6523129224639546 id=0.5902471640216204 rare=None 50s
+Levine_32dim L4_both H2 1 hung=0.6621859284070178 id=0.5987863526447728 rare=None 51s
+Levine_32dim L4_both H2 2 hung=0.6558229714028031 id=0.5932971942652312 rare=None 51s
+Levine_32dim L4_both H2 0 hung=0.6572728157340375 id=0.5998947542279573 rare=None 53s
+Levine_32dim L4_both H2 4 hung=0.647575171679167 id=0.5869083423353124 rare=None 52s
+Levine_32dim L4_both H2 3 hung=0.6395596761296094 id=0.579911046654195 rare=None 53s
+Levine_32dim L5_both_ref1 H2 0 hung=0.755027713860664 id=0.7434519653784554 rare=None 57s
+Levine_32dim L5_both_ref1 H2 1 hung=0.7356865730386711 id=0.676951031233275 rare=None 56s
+Levine_32dim L6_neither H2 0 hung=0.5619191402342532 id=None rare=None 46s
+Levine_32dim L5_both_ref1 H2 2 hung=0.6892110509638735 id=0.6845051024824428 rare=None 57s
+Levine_32dim L5_both_ref1 H2 3 hung=0.6488675960171807 id=0.5878876176226101 rare=None 58s
+Levine_32dim L5_both_ref1 H2 4 hung=0.6643349615821987 id=0.6437380535093572 rare=None 57s
+Levine_32dim L6_neither H2 1 hung=0.5769540295067971 id=None rare=None 45s
+Levine_32dim L6_neither H2 3 hung=0.48252938697167796 id=None rare=None 43s
+Levine_32dim L6_neither H2 2 hung=0.5279058029048697 id=None rare=None 45s
+Levine_32dim L6_neither H2 4 hung=0.5206129167208706 id=None rare=None 43s
+Levine_32dim L6_order H2 0 hung=0.4988984996999954 id=0.32632927027380765 rare=None 54s
+Levine_32dim L6_order H2 2 hung=0.4703133155271583 id=0.2675650153704178 rare=None 53s
+Levine_32dim L6_order H2 1 hung=0.47844154241378595 id=0.23469110777778426 rare=None 55s
+Levine_32dim L6_order H2 3 hung=0.5145324040051319 id=0.2978771306641955 rare=None 51s
+Levine_32dim L6_order H2 4 hung=0.5302865434861725 id=0.28238192587604494 rare=None 54s
+Levine_32dim L6_rules H2 0 hung=0.6758781993341584 id=0.5422461673297561 rare=None 57s
+Levine_32dim L6_rules H2 2 hung=0.6496796225440086 id=0.526304258186615 rare=None 56s
+Levine_32dim L6_rules H2 1 hung=0.618934801323986 id=0.5424509761961567 rare=None 57s
+Levine_32dim L6_rules H2 3 hung=0.579118793944897 id=0.5083469919807416 rare=None 58s
+Levine_32dim L6_rules H2 4 hung=0.6065423048232824 id=0.5256646864926205 rare=None 58s
+Levine_32dim L6_both H2 0 hung=0.6627457604498795 id=0.5296450042695958 rare=None 56s
+Levine_32dim L6_both H2 1 hung=0.6160115191229758 id=0.5396591667494478 rare=None 58s
+Levine_32dim L6_both_marginal H2 0 hung=0.6892750122695155 id=0.6675772457340495 rare=None 50s
+Levine_32dim L6_both H2 2 hung=0.6062806839921523 id=0.5145750446602916 rare=None 65s
+Levine_32dim L6_both H2 3 hung=0.5809571264153967 id=0.5072636043126797 rare=None 62s
+Levine_32dim L6_both H2 4 hung=0.6058245493416112 id=0.5263241177859831 rare=None 63s
+Levine_32dim L6_both_marginal H2 1 hung=0.7205593912063003 id=0.6970490516187994 rare=None 47s
+Levine_32dim L6_both_marginal H2 2 hung=0.7162838833423588 id=0.6953697009035779 rare=None 49s
+Levine_32dim L6_both_marginal H2 3 hung=0.6800225389820737 id=0.6508676119393859 rare=None 46s
+Levine_32dim L6_both_marginal H2 4 hung=0.6900883198477101 id=0.6697105565614871 rare=None 52s
+Levine_32dim L6_both_unk0 H2 0 hung=0.6320739171736912 id=0.5493513728619207 rare=None 56s
+Levine_32dim L6_both_unk0 H2 2 hung=0.6143036138008517 id=0.5410997662474942 rare=None 57s
+Levine_32dim L6_both_unk0 H2 1 hung=0.5984942232111294 id=0.5210234366354901 rare=None 58s
+Levine_32dim L6_both_unk0 H2 3 hung=0.589857561331328 id=0.5190563907100818 rare=None 58s
+Levine_32dim L6_both_unk0 H2 4 hung=0.5807556379496174 id=0.5024972868250478 rare=None 57s
+Levine_32dim L6_both_unk1 H2 0 hung=0.6177271421530592 id=0.5364957268668327 rare=None 59s
+Levine_32dim L6_both_unk1 H2 1 hung=0.6145362053715472 id=0.5361035166421266 rare=None 59s
+Nilsson_rare R_rules_classifier S1 0 hung=None id=0.1634078212290503 rare=0.1634078212290503 3s
+Nilsson_rare R_rules_classifier S1 1 hung=None id=0.1473242392444911 rare=0.1473242392444911 3s
+Levine_32dim L6_both_unk1 H2 2 hung=0.5901768832362112 id=0.5208211459088625 rare=None 60s
+Nilsson_rare R_rules_classifier S1 2 hung=None id=0.16623253611176889 rare=0.16623253611176889 3s
+Nilsson_rare R_rules_classifier S1 3 hung=None id=0.4163568773234201 rare=0.4163568773234201 3s
+Nilsson_rare R_rules_classifier S1 4 hung=None id=0.1686746987951807 rare=0.16867469879518074 4s
+Nilsson_rare L0_gmm S1 0 hung=None id=None rare=0.1951219512195122 10s
+Nilsson_rare L0_gmm S1 1 hung=None id=None rare=0.2012084592145015 10s
+Nilsson_rare L0_gmm S1 2 hung=None id=None rare=0.1695528560351512 15s
+Nilsson_rare L0_gmm S1 3 hung=None id=None rare=0.18281938325991193 16s
+Nilsson_rare L0_gmm S1 4 hung=None id=None rare=0.23073820088745461 13s
+Nilsson_rare L1_t S1 0 hung=None id=None rare=0.1536686663590217 12s
+Nilsson_rare L1_t S1 1 hung=None id=None rare=0.13544844417327637 9s
+Nilsson_rare L1_t S1 2 hung=None id=None rare=0.1520308599954618 8s
+Levine_32dim L6_both_unk1 H2 3 hung=0.5923001372158002 id=0.5226555787879327 rare=None 82s
+Nilsson_rare L1_t S1 3 hung=None id=None rare=0.15020297699594046 8s
+2026-11-18 03:10:14.929 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 03:10:14.930 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 03:10:15.609 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 03:10:15.609 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Nilsson_rare L1_t S1 4 hung=None id=None rare=0.13362760834670948 8s
+2026-11-18 03:10:18.089 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 03:10:18.090 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 03:10:18.986 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Nilsson_rare L2_flowsom S1 0 hung=None id=None rare=0.5029239766081871 6s
+2026-11-18 03:10:19.424 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 03:10:19.425 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 03:10:19.454 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Nilsson_rare L2_flowsom S1 1 hung=None id=None rare=0.2804674457429049 5s
+2026-11-18 03:10:19.852 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 03:10:19.852 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 03:10:21.568 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Nilsson_rare L2_flowsom S1 2 hung=None id=None rare=0.23592302209550964 5s
+2026-11-18 03:10:22.057 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 03:10:22.164 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Nilsson_rare L2_flowsom S1 4 hung=None id=None rare=0.5703422053231939 3s
+Nilsson_rare L2_flowsom S1 3 hung=None id=None rare=0.5771495877502945 3s
+Levine_32dim L6_both_unk1 H2 4 hung=0.6052535553641241 id=0.5252230347137724 rare=None 82s
+Nilsson_rare L3_order S1 0 hung=None id=0.00273224043715847 rare=0.13589063456437464 10s
+Nilsson_rare L3_order S1 1 hung=None id=0.0026246719160104987 rare=0.1352833638025594 11s
+Nilsson_rare L3_order S1 2 hung=None id=0.0 rare=0.13650338184054112 11s
+Nilsson_rare L3_order S1 3 hung=None id=0.0 rare=0.13506388156560534 10s
+Nilsson_rare L3_order_rankinit S1 0 hung=None id=0.013922728854855551 rare=0.15218370103556955 7s
+Nilsson_rare L3_order S1 4 hung=None id=0.0 rare=0.13672757134058716 10s
+Nilsson_rare L3_order_rankinit S1 2 hung=None id=0.22715736040609136 rare=0.22715736040609139 7s
+Nilsson_rare L3_order_rankinit S1 1 hung=None id=0.012478729438457176 rare=0.1404095277893857 9s
+Nilsson_rare L3_order_rankinit S1 3 hung=None id=0.0113314447592068 rare=0.14500214500214503 7s
+Nilsson_rare L4_rules S1 0 hung=None id=0.12605832549388524 rare=0.1260583254938852 10s
+Nilsson_rare L3_order_rankinit S1 4 hung=None id=0.01361349511689849 rare=0.1401087411125052 10s
+Nilsson_rare L4_rules S1 1 hung=None id=0.11278068546344758 rare=0.11278068546344758 10s
+Nilsson_rare L4_rules S1 2 hung=None id=0.11883646683221 rare=0.11883646683221 12s
+Nilsson_rare L4_rules S1 4 hung=None id=0.11333559552086868 rare=0.11333559552086869 11s
+Nilsson_rare L4_both S1 0 hung=None id=0.12605832549388524 rare=0.1260583254938852 11s
+Nilsson_rare L4_rules S1 3 hung=None id=0.11949349028000714 rare=0.11949349028000714 11s
+Nilsson_rare L4_both S1 1 hung=None id=0.11278068546344758 rare=0.11278068546344758 12s
+Nilsson_rare L4_both S1 2 hung=None id=0.11883646683221 rare=0.11883646683221 11s
+Nilsson_rare L4_both S1 3 hung=None id=0.11949349028000714 rare=0.11949349028000714 11s
+Nilsson_rare L4_both S1 4 hung=None id=0.11333559552086868 rare=0.11333559552086869 10s
+Nilsson_rare L6_neither S1 0 hung=None id=None rare=0.15014742572011794 22s
+Nilsson_rare L6_neither S1 3 hung=None id=None rare=0.10250851656859708 21s
+Nilsson_rare L6_neither S1 1 hung=None id=None rare=0.13590638472592897 23s
+Nilsson_rare L6_neither S1 2 hung=None id=None rare=0.14773488060700735 22s
+Nilsson_rare L6_neither S1 4 hung=None id=None rare=0.1334946561806816 22s
+Nilsson_rare L6_order S1 0 hung=None id=0.007462686567164179 rare=0.13627006998764923 25s
+Nilsson_rare L6_order S1 1 hung=None id=0.0 rare=0.1372020725388601 25s
+Nilsson_rare L6_order S1 2 hung=None id=0.0 rare=0.13754415125701225 25s
+Nilsson_rare L6_order S1 3 hung=None id=0.0 rare=0.14282632146709817 25s
+Nilsson_rare L6_order S1 4 hung=None id=0.0 rare=0.13672036348616273 25s
+Nilsson_rare L6_rules S1 0 hung=None id=0.3845675171126322 rare=0.3845675171126322 26s
+Nilsson_rare L6_rules S1 1 hung=None id=0.34594594594594597 rare=0.3459459459459459 25s
+Nilsson_rare L6_rules S1 2 hung=None id=0.38845553822152884 rare=0.3884555382215289 26s
+Nilsson_rare L6_rules S1 3 hung=None id=0.015727391874180863 rare=0.14037347070186734 25s
+Nilsson_rare L6_rules S1 4 hung=None id=0.37543859649122807 rare=0.37543859649122807 25s
+Nilsson_rare L6_both S1 0 hung=None id=0.3817841547099189 rare=0.3817841547099189 26s
+Nilsson_rare L6_both S1 1 hung=None id=0.3440366972477064 rare=0.34403669724770647 25s
+Nilsson_rare L6_both S1 2 hung=None id=0.3904320987654321 rare=0.3904320987654321 27s
+Nilsson_rare L6_both S1 3 hung=None id=0.013054830287206266 rare=0.1408027473706804 26s
+Nilsson_rare L6_both S1 4 hung=None id=0.3793716656787196 rare=0.3793716656787196 28s
+Nilsson_rare L6_both_marginal S1 0 hung=None id=0.11708524938096923 rare=0.11708524938096923 17s
+Nilsson_rare L6_both_marginal S1 1 hung=None id=0.11409858669424336 rare=0.11409858669424336 16s
+Nilsson_rare L6_both_marginal S1 2 hung=None id=0.11679604798870855 rare=0.11679604798870853 19s
+Nilsson_rare L6_both_marginal S1 3 hung=None id=0.007537688442211055 rare=0.14118148859031773 17s
+Nilsson_rare L6_both_marginal S1 4 hung=None id=0.11401997933172581 rare=0.11401997933172581 16s
+Nilsson_rare L6_both_unk0 S1 0 hung=None id=0.016090610813969168 rare=0.016090610813969168 19s
+Nilsson_rare L6_both_unk0 S1 1 hung=None id=0.016090610813969168 rare=0.016090610813969168 19s
+Nilsson_rare L6_both_unk0 S1 2 hung=None id=0.016090610813969168 rare=0.016090610813969168 18s
+Nilsson_rare L6_both_unk0 S1 3 hung=None id=0.016090610813969168 rare=0.016090610813969168 19s
+Nilsson_rare L6_both_unk0 S1 4 hung=None id=0.016090610813969168 rare=0.016090610813969168 19s
+Nilsson_rare L6_both_unk1 S1 0 hung=None id=0.048611582592165116 rare=0.04861158259216512 18s
+Nilsson_rare L6_both_unk1 S1 1 hung=None id=0.050196298373527765 rare=0.050196298373527765 19s
+Mosmann_rare R_rules_classifier S1 0 hung=None id=0.0012612254907685301 rare=0.0012612254907685301 4s
+Nilsson_rare L6_both_unk1 S1 2 hung=None id=0.04935548355966085 rare=0.04935548355966085 18s
+Mosmann_rare R_rules_classifier S1 1 hung=None id=0.0013375606856236995 rare=0.0013375606856236997 4s
+Mosmann_rare R_rules_classifier S1 2 hung=None id=0.0012927861336716922 rare=0.0012927861336716922 4s
+Mosmann_rare R_rules_classifier S1 3 hung=None id=0.0012993731727564757 rare=0.0012993731727564757 4s
+Mosmann_rare R_rules_classifier S1 4 hung=None id=0.0015433752759855094 rare=0.0015433752759855097 7s
+Nilsson_rare L6_both_unk1 S1 3 hung=None id=0.052137187795820286 rare=0.052137187795820286 22s
+Nilsson_rare L6_both_unk1 S1 4 hung=None id=0.049199477770906344 rare=0.049199477770906344 28s
+Mosmann_rare L0_gmm S1 0 hung=None id=None rare=0.024602529882789832 18s
+Mosmann_rare L0_gmm S1 1 hung=None id=None rare=0.021515988945913937 18s
+Mosmann_rare L0_gmm S1 3 hung=None id=None rare=0.028024167630800876 22s
+Mosmann_rare L0_gmm S1 2 hung=None id=None rare=0.0231988932638076 31s
+Mosmann_rare L1_t S1 0 hung=None id=None rare=0.016586921850079747 24s
+Mosmann_rare L0_gmm S1 4 hung=None id=None rare=0.0216829122737219 23s
+Mosmann_rare L1_t S1 1 hung=None id=None rare=0.03210001689474574 15s
+Mosmann_rare L1_t S1 2 hung=None id=None rare=0.02134540750323415 14s
+2026-11-18 03:15:24.898 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 03:15:24.899 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 03:15:26.024 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 03:15:26.025 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Mosmann_rare L1_t S1 3 hung=None id=None rare=0.030433225921947728 10s
+Mosmann_rare L1_t S1 4 hung=None id=None rare=0.04928031227128569 10s
+2026-11-18 03:15:30.990 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 03:15:30.991 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 03:15:32.181 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 03:15:32.181 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 03:15:47.296 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 03:15:47.396 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Mosmann_rare L2_flowsom S1 1 hung=None id=None rare=0.20779220779220783 25s
+Mosmann_rare L2_flowsom S1 0 hung=None id=None rare=0.5706666666666667 26s
+2026-11-18 03:15:49.515 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 03:15:49.515 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 03:15:52.534 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 03:15:53.743 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Mosmann_rare L2_flowsom S1 2 hung=None id=None rare=0.12500000000000003 25s
+Mosmann_rare L2_flowsom S1 3 hung=None id=None rare=0.13151041666666669 25s
+Mosmann_rare L3_order S1 0 hung=None id=0.0008687258687258687 rare=0.036470588235294116 13s
+Mosmann_rare L3_order S1 2 hung=None id=0.0012339819648789748 rare=0.03452805404391068 12s
+2026-11-18 03:16:10.064 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Mosmann_rare L3_order S1 1 hung=None id=0.0007326007326007326 rare=0.03678811460912628 14s
+Mosmann_rare L2_flowsom S1 4 hung=None id=None rare=0.12828736369467608 23s
+Mosmann_rare L3_order S1 3 hung=None id=0.004457652303120356 rare=0.0202854996243426 15s
+Mosmann_rare L3_order S1 4 hung=None id=0.0 rare=0.017421602787456445 13s
+Mosmann_rare L3_order_rankinit S1 0 hung=None id=0.0 rare=0.05317577548005908 14s
+Mosmann_rare L3_order_rankinit S1 1 hung=None id=0.03284784629687016 rare=0.03284784629687016 14s
+Mosmann_rare L3_order_rankinit S1 2 hung=None id=0.00016350110363244952 rare=0.020923705026792548 13s
+Mosmann_rare L3_order_rankinit S1 3 hung=None id=0.00015067048365225252 rare=0.023775558725630055 13s
+Mosmann_rare L3_order_rankinit S1 4 hung=None id=0.0 rare=0.014449475002408247 13s
+Mosmann_rare L4_rules S1 0 hung=None id=0.0011338241093729459 rare=0.016274864376130196 14s
+Mosmann_rare L4_rules S1 1 hung=None id=0.0012987560615644108 rare=0.009558823529411765 14s
+Mosmann_rare L4_rules S1 2 hung=None id=0.0015199451498054636 rare=0.0031620553359683794 13s
+Mosmann_rare L4_rules S1 3 hung=None id=0.0013168202957011652 rare=0.008140152185453902 13s
+Mosmann_rare L4_rules S1 4 hung=None id=0.0011010092584869463 rare=0.011832374691865242 13s
+Mosmann_rare L4_both S1 1 hung=None id=0.0012987560615644108 rare=0.009558823529411765 13s
+Mosmann_rare L4_both S1 0 hung=None id=0.0011338241093729459 rare=0.016274864376130196 14s
+Mosmann_rare L4_both S1 2 hung=None id=0.0015199451498054636 rare=0.0031620553359683794 13s
+Mosmann_rare L4_both S1 3 hung=None id=0.0013168202957011652 rare=0.008140152185453902 14s
+Mosmann_rare L4_both S1 4 hung=None id=0.0011010092584869463 rare=0.011832374691865242 13s
+Mosmann_rare L6_neither S1 1 hung=None id=None rare=0.022451081359423274 24s
+Mosmann_rare L6_neither S1 0 hung=None id=None rare=0.010464703795672225 26s
+Mosmann_rare L6_neither S1 2 hung=None id=None rare=0.01809725158562368 24s
+Mosmann_rare L6_neither S1 3 hung=None id=None rare=0.022459539799625675 25s
+Mosmann_rare L6_neither S1 4 hung=None id=None rare=0.02106149957877001 24s
+Mosmann_rare L6_order S1 0 hung=None id=4.307977296959645e-05 rare=0.03379024545744342 28s
+Mosmann_rare L6_order S1 1 hung=None id=6.97423021933954e-05 rare=0.022159506637399393 28s
+Mosmann_rare L6_order S1 2 hung=None id=3.665689149560117e-05 rare=0.022380030126963633 29s
+Mosmann_rare L6_order S1 3 hung=None id=0.0004084967320261438 rare=0.023705408515535095 28s
+Mosmann_rare L6_order S1 4 hung=None id=0.00019773592367393347 rare=0.020402271196227506 29s
+Mosmann_rare L6_rules S1 0 hung=None id=1.525238890541231e-05 rare=0.027793218454697052 29s
+Mosmann_rare L6_rules S1 1 hung=None id=3.0803825835168726e-05 rare=0.027376033057851242 28s
+Mosmann_rare L6_rules S1 2 hung=None id=4.663744053726331e-05 rare=0.025438379846875775 30s
+Mosmann_rare L6_rules S1 3 hung=None id=0.00012273421139433736 rare=0.021901007446342532 29s
+Mosmann_rare L6_rules S1 4 hung=None id=3.097077906994751e-05 rare=0.01472599137477648 29s
+Mosmann_rare L6_both S1 0 hung=None id=1.525238890541231e-05 rare=0.027793218454697052 30s
+Mosmann_rare L6_both S1 1 hung=None id=3.0805011975448405e-05 rare=0.02738310514079049 30s
+Mosmann_rare L6_both S1 2 hung=None id=4.666065262699474e-05 rare=0.025915209460309473 29s
+Mosmann_rare L6_both S1 3 hung=None id=0.00012272197336933178 rare=0.021679623343917664 29s
+Mosmann_rare L6_both S1 4 hung=None id=3.097077906994751e-05 rare=0.01472599137477648 32s
+Mosmann_rare L6_both_marginal S1 0 hung=None id=0.0 rare=0.026660083929893857 25s
+Mosmann_rare L6_both_marginal S1 1 hung=None id=0.0 rare=0.02986725663716814 24s
+Mosmann_rare L6_both_marginal S1 2 hung=None id=0.0 rare=0.030106257378984654 30s
+Mosmann_rare L6_both_marginal S1 3 hung=None id=1.5956470747800002e-05 rare=0.029113743399457683 29s
+Mosmann_rare L6_both_unk0 S1 0 hung=None id=0.0005497151819733767 rare=0.0005497151819733766 26s
+Mosmann_rare L6_both_marginal S1 4 hung=None id=1.6230077579770833e-05 rare=0.07399103139013452 27s
+Mosmann_rare L6_both_unk0 S1 1 hung=None id=0.0005497151819733767 rare=0.0005497151819733766 26s
+Mosmann_rare L6_both_unk0 S1 2 hung=None id=0.0005497151819733767 rare=0.0005497151819733766 26s
+Mosmann_rare L6_both_unk0 S1 4 hung=None id=0.0005497151819733767 rare=0.0005497151819733766 27s
+Mosmann_rare L6_both_unk0 S1 3 hung=None id=0.0005497151819733767 rare=0.0005497151819733766 28s
+Mosmann_rare L6_both_unk1 S1 0 hung=None id=0.0010005423500589103 rare=0.0010005423500589106 27s
+Mosmann_rare L6_both_unk1 S1 1 hung=None id=0.0010056989607777405 rare=0.0010056989607777405 27s
+Mosmann_rare L6_both_unk1 S1 2 hung=None id=0.0010087471453856824 rare=0.0010087471453856824 24s
+Samusik_all R_rules_classifier 06 0 hung=0.5736542272270171 id=0.573654227227017 rare=None 8s
+Mosmann_rare L6_both_unk1 S1 3 hung=None id=0.0009143496921067364 rare=0.0009143496921067364 26s
+Samusik_all R_rules_classifier 06 1 hung=0.5684149563411394 id=0.5684149563411394 rare=None 8s
+Mosmann_rare L6_both_unk1 S1 4 hung=None id=0.0010039693975254014 rare=0.0010039693975254012 23s
+Samusik_all R_rules_classifier 06 2 hung=0.5690550142796287 id=0.5690550142796287 rare=None 9s
+Samusik_all R_rules_classifier 06 3 hung=0.5681521985671748 id=0.5681521985671748 rare=None 9s
+Samusik_all R_rules_classifier 06 4 hung=0.5702157424947835 id=0.5702157424947835 rare=None 9s
+Samusik_all R_rules_classifier 07 0 hung=0.5508892482486824 id=0.5508892482486824 rare=None 9s
+Samusik_all R_rules_classifier 07 1 hung=0.5514963182455034 id=0.5514963182455034 rare=None 9s
+Samusik_all R_rules_classifier 07 2 hung=0.5490702824228126 id=0.5490702824228126 rare=None 9s
+Samusik_all R_rules_classifier 07 3 hung=0.5474355317541263 id=0.5474355317541263 rare=None 9s
+Samusik_all R_rules_classifier 07 4 hung=0.5458519364843238 id=0.5458519364843237 rare=None 8s
+Samusik_all R_rules_classifier 08 1 hung=0.5485385961944601 id=0.5484492701588831 rare=None 9s
+Samusik_all R_rules_classifier 08 0 hung=0.5473526351421997 id=0.5473526351421997 rare=None 9s
+Samusik_all R_rules_classifier 08 2 hung=0.5493333230909524 id=0.5490767725107645 rare=None 9s
+Samusik_all R_rules_classifier 08 3 hung=0.5479476963401094 id=0.5477452545790485 rare=None 9s
+Samusik_all R_rules_classifier 08 4 hung=0.549105939560309 id=0.549105939560309 rare=None 10s
+Samusik_all R_rules_classifier 09 0 hung=0.5699868394169721 id=0.5699868394169721 rare=None 9s
+Samusik_all R_rules_classifier 09 2 hung=0.5729508486156896 id=0.5729508486156897 rare=None 11s
+Samusik_all R_rules_classifier 09 1 hung=0.5705664072733273 id=0.5705664072733273 rare=None 12s
+Samusik_all R_rules_classifier 09 3 hung=0.5701414136875173 id=0.5701414136875173 rare=None 16s
+Samusik_all R_rules_classifier 09 4 hung=0.5720678129277835 id=0.5720678129277835 rare=None 15s
+Samusik_all R_rules_classifier 10 1 hung=0.5564881363651759 id=0.5486386062500214 rare=None 14s
+Samusik_all R_rules_classifier 10 0 hung=0.5548576127749342 id=0.5453665303812476 rare=None 11s
+Samusik_all R_rules_classifier 10 3 hung=0.5585783591014514 id=0.5498227901143546 rare=None 15s
+Samusik_all R_rules_classifier 10 2 hung=0.5505681603091968 id=0.54149134198987 rare=None 16s
+Samusik_all R_rules_classifier 10 4 hung=0.5554022177211037 id=0.5474764563129789 rare=None 25s

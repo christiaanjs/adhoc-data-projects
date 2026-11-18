@@ -42,3 +42,5 @@ Levine_32dim L3_order H2 4 hung=0.6428594792962803 id=0.3984762941325829 rare=No
 Levine_32dim L3_order_rankinit H2 1 hung=0.6063945860093991 id=0.2943134369574831 rare=None 35s
 Levine_32dim L3_order_rankinit H2 0 hung=0.6124458636126705 id=0.2403662757925416 rare=None 36s
 Levine_32dim L3_order_rankinit H2 2 hung=0.590498141690908 id=0.32528086349354973 rare=None 34s
+Levine_32dim L3_order_rankinit H2 4 hung=0.5891857553080075 id=0.28925933926795366 rare=None 37s
+Levine_32dim L3_order_rankinit H2 3 hung=0.5799641239933689 id=0.3203307021174591 rare=None 39s

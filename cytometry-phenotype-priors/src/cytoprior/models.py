@@ -165,9 +165,20 @@ class PriorMixture(nn.Module):
 
     def rule_scores(self, x):
         """s_k(x) = mean over specified markers of log soft-membership in the stated level."""
-        t, h = self.thresholds[:, 0], self.thresholds[:, 1]
         tau = self.tau
         ls = F.logsigmoid
+        if self.thresholds.dim() == 3:          # per-population (hierarchical) thresholds (Kk,D,2)
+            t, h = self.thresholds[..., 0], self.thresholds[..., 1]
+            xx = x[:, None, :]
+            per = torch.stack([ls((t - xx) / tau), ls((xx - (t - tau)) / tau) + ls((h - xx) / tau),
+                               ls((xx - t) / tau), ls((xx - h) / tau)], -1)        # (n,Kk,D,4)
+            lev = self.level[: self.Kk]
+            spec = (lev >= 0).float()
+            g = per.gather(3, lev.clamp(min=0)[None, :, :, None].expand(x.shape[0], -1, -1, 1)).squeeze(-1)
+            s_known = (g * spec).sum(-1) / spec.sum(-1).clamp(min=1)
+            s_unk = torch.full((x.shape[0], self.Ku), self.unk_score, device=x.device)
+            return torch.cat([s_known, s_unk], 1)
+        t, h = self.thresholds[:, 0], self.thresholds[:, 1]
         per = torch.stack([
             ls((t - x) / tau),                                    # neg
             ls((x - (t - tau)) / tau) + ls((h - x) / tau),        # dim
@@ -250,7 +261,7 @@ class PriorMixture(nn.Module):
         return hist
 
     @torch.no_grad()
-    def predict_proba(self, X, bs=50000):
+    def predict_proba(self, X, bs=10000):
         out = []
         for i in range(0, len(X), bs):
             xb = torch.as_tensor(X[i:i + bs], dtype=torch.float32)
@@ -297,12 +308,20 @@ def prior_init(X, prior: PriorSpec, n_unknown, seed, reg=0.05, over=3):
     return cent[idx], cov[idx], w[idx] / w[idx].sum()
 
 
-def rules_init(X, prior: PriorSpec, n_unknown, seed, tau=0.5, lam=4.0, unk_score=math.log(0.5), reg=0.05):
+def _thresholds(X, prior, cfg, seed):
+    from .priors import hierarchical_thresholds
+    if prior is not None and cfg.get("thresholds", "global") == "hier":
+        return hierarchical_thresholds(X, prior, seed=seed)
+    return marker_thresholds(X, seed=seed)
+
+
+def rules_init(X, prior: PriorSpec, n_unknown, seed, tau=0.5, lam=4.0, unk_score=math.log(0.5), reg=0.05,
+               thresholds=None):
     """Initialise known components from soft rule memberships r_ik = softmax_k(lam * s_k(x)) (unknown
     components get constant score); unknown components = k-means on cells best explained as unknown."""
     m = PriorMixture(X.shape[1], prior.K, max(n_unknown, 1), prior=prior, use_rules=True, tau=tau,
                      unk_score=unk_score)
-    m.thresholds = torch.as_tensor(marker_thresholds(X, seed=seed))
+    m.thresholds = torch.as_tensor(thresholds if thresholds is not None else marker_thresholds(X, seed=seed))
     with torch.no_grad():
         s = m.rule_scores(torch.as_tensor(X, dtype=torch.float32)).numpy()
     s = s[:, : prior.K + 1]
@@ -346,11 +365,12 @@ def fit_prior_mixture(X_fit, X_all, prior, cfg, seed, Xlab=None, ylab=None):
                          flow=cfg.get("flow", "none"), gap_sigma=cfg.get("gap_sigma", 2.0),
                          lam=cfg.get("lam", 1.0), tau=cfg.get("tau", 0.5), seed=seed)
         if cfg.get("init", "rules") == "rules":
-            mu0, cov0, w0 = rules_init(X_fit, prior, Ku, seed, tau=cfg.get("tau", 0.5))
+            mu0, cov0, w0 = rules_init(X_fit, prior, Ku, seed, tau=cfg.get("tau", 0.5),
+                                       thresholds=_thresholds(X_fit, prior, cfg, seed))
         else:
             mu0, cov0, w0 = prior_init(X_fit, prior, Ku, seed)
         identity = True
-    m.thresholds = torch.as_tensor(marker_thresholds(X_fit, seed=seed))
+    m.thresholds = torch.as_tensor(_thresholds(X_fit, prior, cfg, seed))
     m.init_params(X_fit, mu0, cov0, w0)
     hist = m.fit(X_fit, Xlab, ylab, steps=cfg.get("steps", 500), lr=cfg.get("lr", 0.02),
                  batch=cfg.get("batch", 4096), seed=seed, lab_weight=cfg.get("lab_weight", 1.0))
@@ -368,11 +388,11 @@ def fit_rules_classifier(X, prior, cfg, seed):
     an 'unknown' option with constant score; i.e. soft automated gating with the same rules."""
     t0 = time.time()
     m = PriorMixture(X.shape[1], prior.K, 1, prior=prior, use_rules=True, tau=cfg.get("tau", 0.5))
-    m.thresholds = torch.as_tensor(marker_thresholds(X, seed=seed))
+    m.thresholds = torch.as_tensor(_thresholds(X, prior, cfg, seed))
     out = []
     with torch.no_grad():
-        for i in range(0, len(X), 50000):
-            s = m.rule_scores(torch.as_tensor(X[i:i + 50000], dtype=torch.float32))
+        for i in range(0, len(X), 10000):
+            s = m.rule_scores(torch.as_tensor(X[i:i + 10000], dtype=torch.float32))
             out.append(torch.softmax(cfg.get("lam", 3.0) * s, 1).numpy())
     proba = np.concatenate(out)
     cl = proba.argmax(1)

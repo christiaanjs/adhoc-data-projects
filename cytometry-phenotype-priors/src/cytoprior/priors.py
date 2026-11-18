@@ -22,6 +22,7 @@ class PriorSpec:
     citations: list[list[str]]
     parents: list[str | None]
     edges: dict[int, list[tuple[int, int]]]   # marker j -> [(lower k, higher k)] (transitive reduction)
+    nodes: dict | None = None       # name -> (parent, {j: level}) own markers of every hierarchy node / population
 
     @property
     def K(self):
@@ -84,7 +85,10 @@ def load_prior(dataset: str, markers: list[str], label_names: list[str]) -> Prio
     for o in cfg.get("orderings", []) or []:
         j = markers.index(o["marker"])
         edges[j].append((order.index(o["lower"]), order.index(o["higher"])))
-    return PriorSpec(dataset, order, list(markers), lev, inferred, cites, parents, edges)
+    nodes = {}
+    for name, ent in {**hier, **pops}.items():
+        nodes[name] = (ent.get("parent"), {markers.index(m): LEVELS.index(l) for m, l in ent.get("markers", {}).items()})
+    return PriorSpec(dataset, order, list(markers), lev, inferred, cites, parents, edges, nodes)
 
 
 # ---------------------------------------------------------------------------------------------
@@ -125,3 +129,42 @@ def marker_thresholds(X: np.ndarray, max_n: int = 20000, seed: int = 0) -> np.nd
         h = _gmm1d_boundary(above) if len(above) > 200 else t + 1.0
         th[j] = (t, max(h, t + 0.25))
     return th
+
+
+def hierarchical_thresholds(X: np.ndarray, prior: PriorSpec, max_n: int = 30000, seed: int = 0,
+                            min_cells: int = 200) -> np.ndarray:
+    """Per-population thresholds (K, D, 2). A node's OWN markers are thresholded on the cells that pass
+    all of its ancestors' gates (hard rules with the ancestors' thresholds), mirroring how manual gates
+    are drawn inside the parent gate. Falls back to the parent's / global threshold if < min_cells."""
+    rng = np.random.default_rng(seed)
+    Xs = X[rng.choice(len(X), min(max_n, len(X)), replace=False)]
+    glob = marker_thresholds(Xs, max_n=max_n, seed=seed)
+    memo: dict = {}
+
+    def passes(x, j, l, th):
+        t, h = th
+        return [x < t, (x > t - 0.5) & (x < h), x > t, x > h][l]
+
+    def node(name):
+        if name in memo:
+            return memo[name]
+        parent, own = prior.nodes[name]
+        if parent is None:
+            th_par, mask = glob.copy(), np.ones(len(Xs), bool)
+        else:
+            th_par, mask = node(parent)
+        th = th_par.copy()
+        cells = Xs[mask]
+        for j in own:
+            if len(cells) >= min_cells:
+                t = _gmm1d_boundary(cells[:, j])
+                above = cells[cells[:, j] > t, j]
+                h = _gmm1d_boundary(above) if len(above) > min_cells else t + 1.0
+                th[j] = (t, max(h, t + 0.25))
+        m2 = mask.copy()
+        for j, l in own.items():
+            m2 &= passes(Xs[:, j], j, l, th[j])
+        memo[name] = (th, m2)
+        return memo[name]
+
+    return np.stack([node(p)[0] for p in prior.populations]).astype(np.float32)

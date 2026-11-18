@@ -58,3 +58,11 @@ methods:
   L6_both_marginal:  {family: torch, dist: gauss, flow: marginal, use_order: true, use_rules: true}
   L6_both_unk0:      {family: torch, dist: gauss, flow: marginal+coupling, use_order: true, use_rules: true, n_unknown: 0}
   L6_both_unk1:      {family: torch, dist: gauss, flow: marginal+coupling, use_order: true, use_rules: true, n_unknown: 1}
+  # ---- 3b exploration (added after seeing 3a results: marginal monotone flow > coupling flow) ----
+  X_marg_neither:    {family: torch, dist: gauss, flow: marginal}
+  X_marg_order:      {family: torch, dist: gauss, flow: marginal, use_order: true}
+  X_marg_rules:      {family: torch, dist: gauss, flow: marginal, use_rules: true}
+  X_marg_both_ref1:  {family: torch, dist: gauss, flow: marginal, use_order: true, use_rules: true, n_ref: 1}
+  X_marg_both_ref3:  {family: torch, dist: gauss, flow: marginal, use_order: true, use_rules: true, n_ref: 3}
+  X_marg_t_both:     {family: torch, dist: t, flow: marginal, use_order: true, use_rules: true}
+  X_L4_unk15:        {family: torch, dist: t, use_order: true, use_rules: true, n_unknown: 15}
