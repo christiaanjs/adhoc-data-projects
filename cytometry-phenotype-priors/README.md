@@ -32,6 +32,7 @@ sha256sum -c data/SHA256SUMS_raw.txt   # run inside data/raw/hdcytodata
 PYTHONPATH=src python -m cytoprior.data
 PYTHONPATH=src python scripts/tune_val.py Samusik_all
 PYTHONPATH=src python scripts/run_experiments.py --workers 4
+PYTHONPATH=src python scripts/run_experiments.py --split val --datasets Samusik_all Levine_32dim --methods L2_flowsom L4_both L5_both_ref3 L6_both L6_both_marginal X_marg_rules X_marg_both_ref3 X_marg_t_both   # validation check of post-hoc 3b variants
 PYTHONPATH=src python scripts/make_report_assets.py
 ```
 Seeds are fixed (0-4); device is chosen automatically (cuda > mps > cpu); results here were on CPU.
