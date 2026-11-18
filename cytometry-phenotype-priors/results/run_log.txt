@@ -639,3 +639,7 @@ Samusik_all L6_neither 07 1 hung=0.5518452365454868 id=None rare=None 100s
 Samusik_all L6_neither 07 2 hung=0.6010737682092073 id=None rare=None 98s
 Samusik_all L6_neither 07 3 hung=0.613491609738972 id=None rare=None 100s
 Samusik_all L6_neither 07 4 hung=0.6070279751706211 id=None rare=None 99s
+Samusik_all L6_neither 08 0 hung=0.5638131269565939 id=None rare=None 100s
+Samusik_all L6_neither 08 1 hung=0.5621391296630728 id=None rare=None 104s
+Samusik_all L6_neither 08 2 hung=0.5664839386791584 id=None rare=None 106s
+Samusik_all L6_neither 08 3 hung=0.5824028745679697 id=None rare=None 105s
