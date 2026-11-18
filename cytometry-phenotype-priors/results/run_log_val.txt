@@ -1,0 +1,91 @@
+80 jobs
+2026-11-18 07:50:23.906 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 07:50:23.906 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 07:50:24.070 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 07:50:24.071 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 07:50:24.097 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 07:50:24.097 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 07:50:24.306 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 07:50:24.307 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 07:50:31.589 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 07:50:31.624 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 07:50:31.769 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 07:50:31.942 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 04 0 hung=0.657194721933879 id=None rare=None 9s
+2026-11-18 07:50:32.422 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 07:50:32.422 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Samusik_all L2_flowsom 04 2 hung=0.658008827269685 id=None rare=None 9s
+2026-11-18 07:50:32.477 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 07:50:32.477 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Samusik_all L2_flowsom 04 3 hung=0.6565689287075933 id=None rare=None 10s
+2026-11-18 07:50:32.561 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 07:50:32.561 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Samusik_all L2_flowsom 04 1 hung=0.6434822688134726 id=None rare=None 10s
+2026-11-18 07:50:32.722 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 07:50:32.722 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 07:50:38.668 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 07:50:38.839 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 07:50:39.001 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 07:50:39.334 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 04 4 hung=0.6501844433673606 id=None rare=None 7s
+2026-11-18 07:50:39.474 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 07:50:39.474 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Samusik_all L2_flowsom 05 0 hung=0.6946609956418789 id=None rare=None 7s
+2026-11-18 07:50:39.617 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 07:50:39.618 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Samusik_all L2_flowsom 05 1 hung=0.6998414638240374 id=None rare=None 7s
+Samusik_all L2_flowsom 05 2 hung=0.6976255638594289 id=None rare=None 7s
+2026-11-18 07:50:45.909 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 07:50:46.149 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 05 4 hung=0.692126078615093 id=None rare=None 7s
+Samusik_all L2_flowsom 05 3 hung=0.7028825191947274 id=None rare=None 7s
+Samusik_all L4_both 04 0 hung=0.6121997127883425 id=0.5691428403751732 rare=None 75s
+Samusik_all L4_both 04 1 hung=0.6225743510612776 id=0.5625173550097163 rare=None 76s
+Samusik_all L4_both 04 2 hung=0.6217639271352229 id=0.5641651259889544 rare=None 74s
+Samusik_all L4_both 04 3 hung=0.6240446453051717 id=0.5689651691793145 rare=None 75s
+Samusik_all L4_both 05 0 hung=0.6525841906492008 id=0.5915477862687332 rare=None 71s
+Samusik_all L4_both 04 4 hung=0.6220893191869427 id=0.5848334339123248 rare=None 74s
+Samusik_all L4_both 05 1 hung=0.6519317250248897 id=0.5829052956165195 rare=None 70s
+Samusik_all L4_both 05 2 hung=0.6506549719210417 id=0.5839017212689287 rare=None 71s
+Samusik_all L4_both 05 3 hung=0.6492988232095079 id=0.5908760534191204 rare=None 72s
+Samusik_all L4_both 05 4 hung=0.6568208708037894 id=0.5920768353479633 rare=None 71s
+Samusik_all L5_both_ref3 04 0 hung=0.7024059781437737 id=0.6946366716506848 rare=None 98s
+Samusik_all L5_both_ref3 04 1 hung=0.6980499742462047 id=0.6891967690271436 rare=None 101s
+Samusik_all L5_both_ref3 04 2 hung=0.6958482787794331 id=0.6873032839284704 rare=None 98s
+Samusik_all L5_both_ref3 04 3 hung=0.6969920465335625 id=0.6891742713953114 rare=None 98s
+Samusik_all L5_both_ref3 04 4 hung=0.706178550150403 id=0.695421818159034 rare=None 96s
+Samusik_all L5_both_ref3 05 0 hung=0.7242975420412657 id=0.7182601187193555 rare=None 99s
+Samusik_all L5_both_ref3 05 1 hung=0.7150422163695166 id=0.7066845468313764 rare=None 99s
+Samusik_all L5_both_ref3 05 2 hung=0.7207620475831892 id=0.7140299187806004 rare=None 98s
+Samusik_all L5_both_ref3 05 3 hung=0.725455791396752 id=0.7194272461868515 rare=None 90s
+Samusik_all L5_both_ref3 05 4 hung=0.726000128634318 id=0.7182149288544394 rare=None 101s
+Samusik_all L6_both 04 1 hung=0.6582862802794053 id=0.610257758002264 rare=None 109s
+Samusik_all L6_both 04 0 hung=0.6405178285495648 id=0.591082595635174 rare=None 111s
+Samusik_all L6_both 04 2 hung=0.6640333873850356 id=0.621509551441095 rare=None 115s
+Samusik_all L6_both 04 3 hung=0.6612553949352437 id=0.6128662818782957 rare=None 111s
+Samusik_all L6_both 05 0 hung=0.6471270406514292 id=0.6276321383723457 rare=None 102s
+Samusik_all L6_both 04 4 hung=0.6573210848813068 id=0.6201571270897679 rare=None 111s
+Samusik_all L6_both 05 1 hung=0.6415194125298943 id=0.6001293575078116 rare=None 111s
+Samusik_all L6_both 05 2 hung=0.6554211104189316 id=0.6109786183522833 rare=None 107s
+Samusik_all L6_both 05 3 hung=0.649715751643122 id=0.6121119513560216 rare=None 105s
+Samusik_all L6_both 05 4 hung=0.6368996869695712 id=0.5928843175235164 rare=None 105s
+Samusik_all L6_both_marginal 04 0 hung=0.6429014981434616 id=0.6088339665379979 rare=None 100s
+Samusik_all L6_both_marginal 04 1 hung=0.6581709548161448 id=0.6263985650522187 rare=None 99s
+Samusik_all L6_both_marginal 04 2 hung=0.6560259192334759 id=0.6215768776306669 rare=None 91s
+Samusik_all L6_both_marginal 04 3 hung=0.6587044616821992 id=0.623771979773759 rare=None 98s
+Samusik_all L6_both_marginal 04 4 hung=0.6586449849644753 id=0.625684104791408 rare=None 102s
+Samusik_all L6_both_marginal 05 0 hung=0.6763702033404302 id=0.6357046670646205 rare=None 97s
+Samusik_all L6_both_marginal 05 1 hung=0.6708090366371877 id=0.6283561485288317 rare=None 88s
+Samusik_all L6_both_marginal 05 2 hung=0.6740589100636621 id=0.632850933648718 rare=None 97s
+Samusik_all L6_both_marginal 05 3 hung=0.6690054916774409 id=0.632699657573259 rare=None 96s
+Samusik_all L6_both_marginal 05 4 hung=0.6425491428274036 id=0.6058039122998532 rare=None 95s
+Samusik_all X_marg_rules 04 0 hung=0.6331351506456007 id=0.5998767761434113 rare=None 93s
+Samusik_all X_marg_rules 04 1 hung=0.6489670447364677 id=0.6175664660662347 rare=None 98s
+Samusik_all X_marg_rules 04 2 hung=0.6430209595259389 id=0.6083025731877534 rare=None 104s
+Samusik_all X_marg_rules 04 3 hung=0.6482676736249552 id=0.613985431152062 rare=None 104s
+Samusik_all X_marg_rules 04 4 hung=0.6461557956473897 id=0.6145945386988863 rare=None 94s
+Samusik_all X_marg_rules 05 0 hung=0.665660382646864 id=0.6285889597051272 rare=None 93s
+Samusik_all X_marg_rules 05 1 hung=0.6643979566964586 id=0.6234452439994663 rare=None 96s
+Samusik_all X_marg_rules 05 2 hung=0.6676188209773075 id=0.626322543969239 rare=None 96s
+Samusik_all X_marg_rules 05 3 hung=0.6631825045302054 id=0.6250485719903973 rare=None 87s
+Samusik_all X_marg_rules 05 4 hung=0.6309731097534764 id=0.597211141515952 rare=None 95s
