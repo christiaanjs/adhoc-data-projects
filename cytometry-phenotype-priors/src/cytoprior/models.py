@@ -148,11 +148,12 @@ class PriorMixture(nn.Module):
         return x, ld
 
     def component_logpdf(self, z):
+        # L here is the Cholesky factor of the PRECISION matrix (Sigma^-1 = L L^T): maha = ||L^T (z-mu)||^2
         mu, L = self.means(), self.scale_tril()
-        diff = (z[None] - mu[:, None]).transpose(1, 2)              # (K,D,n)
-        sol = torch.linalg.solve_triangular(L, diff, upper=False)  # (K,D,n)
-        maha = (sol ** 2).sum(1)                                    # (K,n)
-        logdet = torch.log(torch.diagonal(L, dim1=-2, dim2=-1)).sum(-1)[:, None]
+        zl = torch.einsum("nd,kde->kne", z, L)                     # (K,n,D)
+        ml = torch.einsum("kd,kde->ke", mu, L)[:, None]            # (K,1,D)
+        maha = ((zl - ml) ** 2).sum(-1)                             # (K,n)
+        logdet = -torch.log(torch.diagonal(L, dim1=-2, dim2=-1)).sum(-1)[:, None]   # log|Sigma|^(1/2)
         D = self.D
         if self.dist == "gauss":
             lp = -0.5 * maha - logdet - 0.5 * D * math.log(2 * math.pi)
@@ -202,7 +203,7 @@ class PriorMixture(nn.Module):
     def init_params(self, X, mu0, cov0, w0):
         with torch.no_grad():
             self.mu_free.copy_(torch.as_tensor(mu0, dtype=torch.float32))
-            Lc = torch.linalg.cholesky(torch.as_tensor(cov0, dtype=torch.float32))
+            Lc = torch.linalg.cholesky(torch.linalg.inv(torch.as_tensor(cov0, dtype=torch.float32)))
             self.L_diag.copy_(inv_softplus(torch.diagonal(Lc, dim1=-2, dim2=-1)))
             self.L_off.copy_(Lc * self.tril_mask)
             self.logits.copy_(torch.log(torch.as_tensor(w0, dtype=torch.float32) + 1e-3))
@@ -215,7 +216,7 @@ class PriorMixture(nn.Module):
                 loss.backward()
                 opt.step()
 
-    def fit(self, X, Xlab=None, ylab=None, lab_weight=1.0, steps=600, lr=0.02, batch=None,
+    def fit(self, X, Xlab=None, ylab=None, lab_weight=1.0, steps=600, lr=0.02, batch=4096,
             verbose=False, seed=0):
         X = torch.as_tensor(X, dtype=torch.float32)
         if Xlab is not None:
@@ -231,12 +232,14 @@ class PriorMixture(nn.Module):
             ll = torch.logsumexp(self.joint(xb), 1).mean()
             loss = -ll - self.log_prior() / len(X)
             if Xlab is not None:
-                jl = self.joint(Xlab)
-                known = ylab >= 0
-                lab_ll = jl[known].gather(1, ylab[known][:, None]).squeeze(1).sum()
+                li = torch.randint(len(Xlab), (min(len(Xlab), batch or len(Xlab)),), generator=g)
+                xl, yl = Xlab[li], ylab[li]
+                jl = self.joint(xl)
+                known = yl >= 0
+                lab_ll = jl[known].gather(1, yl[known][:, None]).squeeze(1).sum()
                 if self.Ku > 0 and (~known).any():
                     lab_ll = lab_ll + torch.logsumexp(jl[~known][:, self.Kk:], 1).sum()
-                loss = loss - lab_weight * lab_ll / len(Xlab)
+                loss = loss - lab_weight * lab_ll / len(xl)
             loss.backward()
             torch.nn.utils.clip_grad_norm_(self.parameters(), 50.0)
             opt.step()
@@ -294,6 +297,34 @@ def prior_init(X, prior: PriorSpec, n_unknown, seed, reg=0.05, over=3):
     return cent[idx], cov[idx], w[idx] / w[idx].sum()
 
 
+def rules_init(X, prior: PriorSpec, n_unknown, seed, tau=0.5, lam=4.0, unk_score=math.log(0.5), reg=0.05):
+    """Initialise known components from soft rule memberships r_ik = softmax_k(lam * s_k(x)) (unknown
+    components get constant score); unknown components = k-means on cells best explained as unknown."""
+    m = PriorMixture(X.shape[1], prior.K, max(n_unknown, 1), prior=prior, use_rules=True, tau=tau,
+                     unk_score=unk_score)
+    m.thresholds = torch.as_tensor(marker_thresholds(X, seed=seed))
+    with torch.no_grad():
+        s = m.rule_scores(torch.as_tensor(X, dtype=torch.float32)).numpy()
+    s = s[:, : prior.K + 1]
+    r = np.exp(lam * (s - s.max(1, keepdims=True)))
+    r /= r.sum(1, keepdims=True)
+    D = X.shape[1]
+    mus, covs, ws = [], [], []
+    for k in range(prior.K):
+        w = r[:, k] + 1e-8
+        mu = (w[:, None] * X).sum(0) / w.sum()
+        dx = X - mu
+        cov = (w[:, None] * dx).T @ dx / w.sum() + reg * np.eye(D)
+        mus.append(mu); covs.append(cov); ws.append(w.mean())
+    if n_unknown:
+        unk = r[:, prior.K] > 0.5
+        Xu = X[unk] if unk.sum() > 10 * n_unknown else X
+        cu, covu, wu = kmeans_init(Xu, n_unknown, seed, reg)
+        mus += list(cu); covs += list(covu); ws += list(wu * r[:, prior.K].mean())
+    w = np.array(ws)
+    return np.array(mus), np.array(covs), w / w.sum()
+
+
 # ------------------------------------------------------------------------------------- runners
 def fit_prior_mixture(X_fit, X_all, prior, cfg, seed, Xlab=None, ylab=None):
     """Returns dict(proba, pred_cluster, pred_pop, model, runtime)."""
@@ -314,19 +345,39 @@ def fit_prior_mixture(X_fit, X_all, prior, cfg, seed, Xlab=None, ylab=None):
                          use_order=cfg.get("use_order", False), use_rules=cfg.get("use_rules", False),
                          flow=cfg.get("flow", "none"), gap_sigma=cfg.get("gap_sigma", 2.0),
                          lam=cfg.get("lam", 1.0), tau=cfg.get("tau", 0.5), seed=seed)
-        mu0, cov0, w0 = prior_init(X_fit, prior, Ku, seed)
+        if cfg.get("init", "rules") == "rules":
+            mu0, cov0, w0 = rules_init(X_fit, prior, Ku, seed, tau=cfg.get("tau", 0.5))
+        else:
+            mu0, cov0, w0 = prior_init(X_fit, prior, Ku, seed)
         identity = True
     m.thresholds = torch.as_tensor(marker_thresholds(X_fit, seed=seed))
     m.init_params(X_fit, mu0, cov0, w0)
     hist = m.fit(X_fit, Xlab, ylab, steps=cfg.get("steps", 500), lr=cfg.get("lr", 0.02),
-                 batch=cfg.get("batch"), seed=seed, lab_weight=cfg.get("lab_weight", 1.0))
+                 batch=cfg.get("batch", 4096), seed=seed, lab_weight=cfg.get("lab_weight", 1.0))
     proba = m.predict_proba(X_all)
     cl = proba.argmax(1)
     pred_pop = np.where(cl < Kk, cl, -1) if identity else None
     with torch.no_grad():
         mu = m.means().numpy()
     return dict(proba=proba, cluster=cl, pred_pop=pred_pop, identity=identity, mu=mu,
-                runtime=time.time() - t0, loss=hist[-1], model=m)
+                runtime=time.time() - t0, loss=hist[-1] if hist else None, model=m)
+
+
+def fit_rules_classifier(X, prior, cfg, seed):
+    """Baseline: no mixture, no likelihood. p(k|x) = softmax(lam * s_k(x)) over known populations plus
+    an 'unknown' option with constant score; i.e. soft automated gating with the same rules."""
+    t0 = time.time()
+    m = PriorMixture(X.shape[1], prior.K, 1, prior=prior, use_rules=True, tau=cfg.get("tau", 0.5))
+    m.thresholds = torch.as_tensor(marker_thresholds(X, seed=seed))
+    out = []
+    with torch.no_grad():
+        for i in range(0, len(X), 50000):
+            s = m.rule_scores(torch.as_tensor(X[i:i + 50000], dtype=torch.float32))
+            out.append(torch.softmax(cfg.get("lam", 3.0) * s, 1).numpy())
+    proba = np.concatenate(out)
+    cl = proba.argmax(1)
+    return dict(proba=proba, cluster=cl, pred_pop=np.where(cl < prior.K, cl, -1), identity=True, mu=None,
+                runtime=time.time() - t0)
 
 
 def fit_gmm(X_fit, X_all, K, seed):
