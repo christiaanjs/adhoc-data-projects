@@ -254,3 +254,164 @@ Samusik_all R_rules_classifier 10 0 hung=0.5548576127749342 id=0.545366530381247
 Samusik_all R_rules_classifier 10 3 hung=0.5585783591014514 id=0.5498227901143546 rare=None 15s
 Samusik_all R_rules_classifier 10 2 hung=0.5505681603091968 id=0.54149134198987 rare=None 16s
 Samusik_all R_rules_classifier 10 4 hung=0.5554022177211037 id=0.5474764563129789 rare=None 25s
+Samusik_all L0_gmm 06 1 hung=0.47879419180620353 id=None rare=None 288s
+Samusik_all L0_gmm 06 0 hung=0.5503309994874083 id=None rare=None 308s
+Samusik_all L0_gmm 06 3 hung=0.4929615630715185 id=None rare=None 321s
+Samusik_all L0_gmm 06 2 hung=0.5011977980160239 id=None rare=None 403s
+Samusik_all L0_gmm 06 4 hung=0.5284561650676656 id=None rare=None 234s
+Samusik_all L0_gmm 07 1 hung=0.5066672574460049 id=None rare=None 230s
+Samusik_all L0_gmm 07 0 hung=0.48923307462357224 id=None rare=None 283s
+Samusik_all L0_gmm 07 2 hung=0.47207214941122455 id=None rare=None 315s
+Samusik_all L0_gmm 07 4 hung=0.44945849306225183 id=None rare=None 332s
+Samusik_all L0_gmm 07 3 hung=0.47367582353579385 id=None rare=None 391s
+Samusik_all L0_gmm 08 1 hung=0.3981268673864346 id=None rare=None 362s
+Samusik_all L0_gmm 08 0 hung=0.4552754815815434 id=None rare=None 522s
+Samusik_all L0_gmm 08 3 hung=0.4718253732913669 id=None rare=None 264s
+Samusik_all L0_gmm 08 2 hung=0.4234221724129763 id=None rare=None 336s
+Samusik_all L0_gmm 09 1 hung=0.48055638408134044 id=None rare=None 253s
+Samusik_all L0_gmm 08 4 hung=0.48478762178164847 id=None rare=None 361s
+Samusik_all L0_gmm 09 2 hung=0.5262568747082008 id=None rare=None 233s
+Samusik_all L0_gmm 09 0 hung=0.4526537079633092 id=None rare=None 480s
+Samusik_all L0_gmm 10 0 hung=0.5117318212832852 id=None rare=None 229s
+Samusik_all L0_gmm 09 3 hung=0.4939159007614915 id=None rare=None 291s
+Samusik_all L0_gmm 09 4 hung=0.5325478822912292 id=None rare=None 306s
+Samusik_all L0_gmm 10 1 hung=0.5133091379582809 id=None rare=None 243s
+Samusik_all L0_gmm 10 3 hung=0.4820639469533443 id=None rare=None 246s
+Samusik_all L1_t 06 0 hung=0.5298294525953852 id=None rare=None 165s
+Samusik_all L0_gmm 10 4 hung=0.46352881845737876 id=None rare=None 240s
+Samusik_all L0_gmm 10 2 hung=0.5108566805545595 id=None rare=None 308s
+Samusik_all L1_t 06 1 hung=0.5626916407806616 id=None rare=None 73s
+Samusik_all L1_t 06 2 hung=0.5330083059391589 id=None rare=None 62s
+Samusik_all L1_t 06 3 hung=0.5164913510443055 id=None rare=None 62s
+Samusik_all L1_t 06 4 hung=0.5518040106624293 id=None rare=None 55s
+Samusik_all L1_t 07 0 hung=0.5070811083572861 id=None rare=None 56s
+Samusik_all L1_t 07 1 hung=0.5066228015259475 id=None rare=None 53s
+Samusik_all L1_t 07 2 hung=0.531587205766093 id=None rare=None 56s
+Samusik_all L1_t 07 3 hung=0.5289501991368136 id=None rare=None 53s
+Samusik_all L1_t 08 0 hung=0.5337912525647295 id=None rare=None 51s
+Samusik_all L1_t 07 4 hung=0.5661742391142588 id=None rare=None 59s
+Samusik_all L1_t 08 1 hung=0.5101803359678252 id=None rare=None 56s
+Samusik_all L1_t 08 2 hung=0.5002333444311942 id=None rare=None 58s
+Samusik_all L1_t 08 4 hung=0.4919536963737854 id=None rare=None 55s
+Samusik_all L1_t 08 3 hung=0.5125584041555181 id=None rare=None 57s
+Samusik_all L1_t 09 0 hung=0.5584638261602128 id=None rare=None 57s
+Samusik_all L1_t 09 1 hung=0.5744432578700774 id=None rare=None 58s
+Samusik_all L1_t 09 3 hung=0.5409262523486124 id=None rare=None 55s
+Samusik_all L1_t 09 2 hung=0.5812580592253053 id=None rare=None 56s
+Samusik_all L1_t 09 4 hung=0.5253617863850988 id=None rare=None 59s
+Samusik_all L1_t 10 0 hung=0.535521810623831 id=None rare=None 56s
+Samusik_all L1_t 10 1 hung=0.5018828562940852 id=None rare=None 55s
+2026-11-18 04:01:15.863 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:15.863 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Samusik_all L1_t 10 2 hung=0.49877561649395347 id=None rare=None 55s
+2026-11-18 04:01:19.834 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:19.835 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:01:24.089 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 06 0 hung=0.6633725218256373 id=None rare=None 10s
+2026-11-18 04:01:24.964 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:24.965 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Samusik_all L1_t 10 3 hung=0.5064449231509689 id=None rare=None 53s
+2026-11-18 04:01:28.234 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 06 1 hung=0.7256245348750215 id=None rare=None 10s
+2026-11-18 04:01:29.068 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:29.068 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:01:29.156 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:29.157 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:01:31.354 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 06 2 hung=0.7047422690135988 id=None rare=None 7s
+2026-11-18 04:01:32.223 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:32.224 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Samusik_all L1_t 10 4 hung=0.5081377881466597 id=None rare=None 52s
+2026-11-18 04:01:34.838 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:34.839 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:01:35.694 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 06 4 hung=0.6987108334019649 id=None rare=None 7s
+2026-11-18 04:01:36.523 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:36.523 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:01:37.678 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 06 3 hung=0.6973139281572106 id=None rare=None 10s
+2026-11-18 04:01:38.584 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:38.585 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:01:40.602 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 07 0 hung=0.6722655767386169 id=None rare=None 9s
+2026-11-18 04:01:44.348 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 04:01:45.046 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 07 1 hung=0.7060928256585353 id=None rare=None 11s
+2026-11-18 04:01:45.279 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:45.280 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:01:45.967 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:45.968 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Samusik_all L2_flowsom 07 2 hung=0.7157556652793039 id=None rare=None 9s
+2026-11-18 04:01:46.016 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:46.017 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:01:46.729 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 07 3 hung=0.6821149756228962 id=None rare=None 9s
+2026-11-18 04:01:47.777 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:47.778 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:01:52.507 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 08 0 hung=0.6822894585444681 id=None rare=None 8s
+2026-11-18 04:01:53.432 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:53.432 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:01:53.654 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 08 1 hung=0.6775065653954747 id=None rare=None 9s
+2026-11-18 04:01:54.677 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:54.678 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:01:55.280 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 04:01:56.011 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 08 2 hung=0.626949422390195 id=None rare=None 8s
+2026-11-18 04:01:56.224 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:56.225 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Samusik_all L2_flowsom 07 4 hung=0.6899354025764097 id=None rare=None 12s
+2026-11-18 04:01:57.087 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:01:57.088 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:02:01.108 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 08 3 hung=0.6596456876041812 id=None rare=None 9s
+2026-11-18 04:02:02.199 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:02:02.199 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:02:02.543 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 04:02:03.410 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 08 4 hung=0.6636544218816754 id=None rare=None 9s
+2026-11-18 04:02:03.471 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:02:03.471 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Samusik_all L2_flowsom 09 0 hung=0.6786978626384806 id=None rare=None 8s
+2026-11-18 04:02:04.275 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:02:04.275 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:02:04.471 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 09 1 hung=0.7111432940138535 id=None rare=None 8s
+2026-11-18 04:02:05.434 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:02:05.434 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:02:09.632 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 09 2 hung=0.6787813822837597 id=None rare=None 8s
+2026-11-18 04:02:10.647 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:02:10.647 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:02:10.888 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 04:02:11.474 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 09 3 hung=0.6884022536283166 id=None rare=None 8s
+2026-11-18 04:02:11.834 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:02:11.835 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Samusik_all L2_flowsom 09 4 hung=0.6915615336507382 id=None rare=None 8s
+2026-11-18 04:02:12.345 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 10 0 hung=0.6952942243138126 id=None rare=None 8s
+2026-11-18 04:02:13.167 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:02:13.168 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:02:16.765 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 04:02:16.766 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 04:02:17.613 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 10 1 hung=0.6834921874177806 id=None rare=None 8s
+2026-11-18 04:02:18.526 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 10 2 hung=0.7053805399831613 id=None rare=None 7s
+2026-11-18 04:02:20.173 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 10 4 hung=0.7060018826268907 id=None rare=None 8s
+2026-11-18 04:02:25.119 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Samusik_all L2_flowsom 10 3 hung=0.6964599757309947 id=None rare=None 10s
+Samusik_all L3_order 06 2 hung=0.5068693184276137 id=0.4079220793268418 rare=None 53s
+Samusik_all L3_order 06 0 hung=0.5479880492404122 id=0.47297128695377594 rare=None 61s
+Samusik_all L3_order 06 1 hung=0.4997349998395655 id=0.39204210093758624 rare=None 63s
+Samusik_all L3_order 06 3 hung=0.5413993600314706 id=0.4422280689606579 rare=None 66s
+Samusik_all L3_order 06 4 hung=0.5225332417672366 id=0.4217508509965562 rare=None 54s
+Samusik_all L3_order 07 1 hung=0.5421463511869815 id=0.41249894433775824 rare=None 60s
+Samusik_all L3_order 07 0 hung=0.5509226844074131 id=0.39882604632758034 rare=None 63s
+Samusik_all L3_order 07 2 hung=0.5502408037816657 id=0.43966876944608496 rare=None 66s
+Samusik_all L3_order 07 3 hung=0.5355069825015102 id=0.4159024802066642 rare=None 61s
+Samusik_all L3_order 07 4 hung=0.5541382698171496 id=0.40625761751162487 rare=None 62s
+Samusik_all L3_order 08 0 hung=0.5290018716952426 id=0.4761388016671868 rare=None 67s
