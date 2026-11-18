@@ -1,0 +1,46 @@
+[
+ {
+  "dataset": "Samusik_all",
+  "sample": "06",
+  "rate": 0.0,
+  "n_edges": 191,
+  "violated": []
+ },
+ {
+  "dataset": "Samusik_all",
+  "sample": "07",
+  "rate": 0.0,
+  "n_edges": 191,
+  "violated": []
+ },
+ {
+  "dataset": "Samusik_all",
+  "sample": "08",
+  "rate": 0.0,
+  "n_edges": 191,
+  "violated": []
+ },
+ {
+  "dataset": "Samusik_all",
+  "sample": "09",
+  "rate": 0.0,
+  "n_edges": 191,
+  "violated": []
+ },
+ {
+  "dataset": "Samusik_all",
+  "sample": "10",
+  "rate": 0.005235602094240838,
+  "n_edges": 191,
+  "violated": [
+   "Sca1: CLP (3.61) !< MPP (3.57)"
+  ]
+ },
+ {
+  "dataset": "Levine_32dim",
+  "sample": "H2",
+  "rate": 0.0,
+  "n_edges": 83,
+  "violated": []
+ }
+]

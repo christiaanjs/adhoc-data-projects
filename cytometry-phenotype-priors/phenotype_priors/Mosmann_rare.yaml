@@ -1,0 +1,17 @@
+# Phenotype prior for Mosmann_rare (human PBMC, flow, 14 markers, asinh(x/150)).
+# Only ONE population is labelled (activated memory CD4 T cells); all other cells are modelled by
+# unknown components.
+# PROVENANCE
+#  mos14_f4a: Mosmann et al. Cytometry A 85:422 (2014), Fig. 4A (PMC4238823, figure image read):
+#             FSC/SSC cells -> Live/Dead low -> CD3+ CD14- -> CD4+ CD8a- -> CD69+ CD45RA- -> IFNg+ TNFa+.
+#             Text: "Two independent operators manually identified the activated memory CD4 T cells
+#             expressing TNFa and IFNg". W&R 2016 Supp. re-gated "following Figure 4A in Mosmann 2014".
+dataset: Mosmann_rare
+levels: [neg, dim, pos, bright]
+hierarchy:
+  CD3pos_CD14neg: {parent: null, markers: {CD3: pos, CD14: neg}, citation: [mos14_f4a]}
+  CD4T:           {parent: CD3pos_CD14neg, markers: {CD4: pos, CD8a: neg}, citation: [mos14_f4a]}
+  act_memory:     {parent: CD4T, markers: {CD69: pos, CD45RA: neg}, citation: [mos14_f4a]}
+populations:
+  activated:      {parent: act_memory, markers: {IFNg: pos, TNFa: pos}, citation: [mos14_f4a]}
+orderings: []

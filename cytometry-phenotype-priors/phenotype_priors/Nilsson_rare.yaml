@@ -1,0 +1,16 @@
+# Phenotype prior for Nilsson_rare (human BM, flow, 13 markers, asinh(x/150)).
+# Only ONE population labelled (HSCs); everything else = unknown components.
+# PROVENANCE
+#  The dataset's own gating (Rundberg Nilsson et al. Cytometry A 83:721 (2013), Fig. 2) could NOT be
+#  retrieved (no PMC copy; Wiley bot wall). The definition below is therefore INFERRED from the
+#  consensus human HSC phenotype:
+#  notta11: Notta F et al. Science 333:218 (2011): Lin- CD34+ CD38- CD45RA- CD90+ CD49f+ HSC.
+#  Lineage markers present in this panel (CD3, CD19, CD11b, CD4, CD10) are set neg (Lin-).
+dataset: Nilsson_rare
+levels: [neg, dim, pos, bright]
+hierarchy:
+  Lin_neg: {parent: null, markers: {CD3: neg, CD19: neg, CD11b: neg, CD10: neg}, citation: [notta11], inferred: true}
+  CD34pos_CD38neg: {parent: Lin_neg, markers: {CD34: pos, CD38: neg, CD45RA: neg}, citation: [notta11], inferred: true}
+populations:
+  HSCs: {parent: CD34pos_CD38neg, markers: {CD90bio: pos, CD49fpur: pos}, citation: [notta11], inferred: true}
+orderings: []
