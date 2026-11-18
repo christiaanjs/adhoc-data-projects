@@ -1,1 +1,44 @@
 230 jobs
+Levine_32dim R_rules_classifier H2 3 hung=0.5954588292271703 id=0.5670443831841957 rare=None 7s
+Levine_32dim R_rules_classifier H2 1 hung=0.5907464914950121 id=0.5615171597013545 rare=None 7s
+Levine_32dim R_rules_classifier H2 0 hung=0.591702675512844 id=0.563628462594648 rare=None 7s
+Levine_32dim R_rules_classifier H2 2 hung=0.591211109049231 id=0.5594710344539289 rare=None 7s
+Levine_32dim R_rules_classifier H2 4 hung=0.5931686340840793 id=0.5617114030194791 rare=None 19s
+Levine_32dim L0_gmm H2 0 hung=0.5629503752952861 id=None rare=None 58s
+Levine_32dim L0_gmm H2 2 hung=0.5322531024359015 id=None rare=None 66s
+Levine_32dim L0_gmm H2 3 hung=0.5110363517098148 id=None rare=None 65s
+Levine_32dim L0_gmm H2 1 hung=0.4947460073561299 id=None rare=None 85s
+Levine_32dim L0_gmm H2 4 hung=0.5079237858125097 id=None rare=None 37s
+Levine_32dim L1_t H2 0 hung=0.5641954424235275 id=None rare=None 49s
+Levine_32dim L1_t H2 1 hung=0.5978187551860609 id=None rare=None 38s
+Levine_32dim L1_t H2 2 hung=0.5648191644939391 id=None rare=None 39s
+2026-11-18 02:54:08.300 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 02:54:08.301 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 02:54:09.374 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 02:54:09.375 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+Levine_32dim L1_t H2 3 hung=0.5003902618672387 id=None rare=None 33s
+2026-11-18 02:54:13.808 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 02:54:13.808 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 02:54:14.121 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Levine_32dim L2_flowsom H2 0 hung=0.721186153031896 id=None rare=None 8s
+2026-11-18 02:54:14.911 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 02:54:14.912 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 02:54:15.553 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Levine_32dim L2_flowsom H2 1 hung=0.6612167738449369 id=None rare=None 8s
+2026-11-18 02:54:16.266 +00:00 | DEBUG    | flowsom.main:__init__:82 - Reading input.
+2026-11-18 02:54:16.266 +00:00 | DEBUG    | flowsom.main:__init__:84 - Fitting model: clustering and metaclustering.
+2026-11-18 02:54:19.633 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+2026-11-18 02:54:19.697 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Levine_32dim L2_flowsom H2 3 hung=0.7359982238665067 id=None rare=None 5s
+Levine_32dim L2_flowsom H2 2 hung=0.7040974913858797 id=None rare=None 8s
+2026-11-18 02:54:20.912 +00:00 | DEBUG    | flowsom.main:__init__:86 - Updating derived values.
+Levine_32dim L2_flowsom H2 4 hung=0.6674829518512786 id=None rare=None 5s
+Levine_32dim L1_t H2 4 hung=0.5153291646905045 id=None rare=None 36s
+Levine_32dim L3_order H2 1 hung=0.662545206830089 id=0.4216734720482698 rare=None 37s
+Levine_32dim L3_order H2 0 hung=0.6144770829840119 id=0.45567476405791085 rare=None 38s
+Levine_32dim L3_order H2 2 hung=0.6950219172415452 id=0.43803249019699514 rare=None 37s
+Levine_32dim L3_order H2 3 hung=0.5991325848066624 id=0.3519469494981148 rare=None 35s
+Levine_32dim L3_order H2 4 hung=0.6428594792962803 id=0.3984762941325829 rare=None 36s
+Levine_32dim L3_order_rankinit H2 1 hung=0.6063945860093991 id=0.2943134369574831 rare=None 35s
+Levine_32dim L3_order_rankinit H2 0 hung=0.6124458636126705 id=0.2403662757925416 rare=None 36s
+Levine_32dim L3_order_rankinit H2 2 hung=0.590498141690908 id=0.32528086349354973 rare=None 34s
