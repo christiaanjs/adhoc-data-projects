@@ -146,7 +146,9 @@ def gates_vs_model_figure(ds, sample, pairs, methods):
     s = d.by_sample(sample)
     rng = np.random.default_rng(0)
     idx = rng.choice(len(s.y), min(30000, len(s.y)), replace=False)
-    cmap = plt.get_cmap("tab20", 24)
+    # 24 distinct colours (tab20 resampled to 24 duplicates hues): tab20 + 4 from tab20b
+    pal = list(plt.get_cmap("tab20").colors) + [plt.get_cmap("tab20b").colors[i] for i in (0, 4, 8, 12)]
+    cmap = lambda k: np.array(pal)[np.asarray(k) % len(pal)]
     panels = [("manual gates", s.y)]
     for me in methods:
         f = RES / "cache" / f"{ds}_{me}_{sample}.npz"
@@ -171,13 +173,13 @@ def gates_vs_model_figure(ds, sample, pairs, methods):
             l = lab[idx]
             un = l < 0
             ax.scatter(s.X[idx][un, jx], s.X[idx][un, jy], s=0.3, c="0.85", rasterized=True)
-            ax.scatter(s.X[idx][~un, jx], s.X[idx][~un, jy], s=0.3, c=cmap(l[~un] % 24), rasterized=True)
+            ax.scatter(s.X[idx][~un, jx], s.X[idx][~un, jy], s=0.3, c=cmap(l[~un]), rasterized=True)
             ax.set_xlabel(mx, fontsize=7)
             ax.set_ylabel(my, fontsize=7)
             ax.tick_params(labelsize=6)
             if i == 0:
                 ax.set_title(title, fontsize=8)
-    handles = [plt.Line2D([], [], marker="o", ls="", color=cmap(k % 24), label=n, ms=4) for k, n in enumerate(d.label_names)]
+    handles = [plt.Line2D([], [], marker="o", ls="", color=cmap(k), label=n, ms=4) for k, n in enumerate(d.label_names)]
     handles.append(plt.Line2D([], [], marker="o", ls="", color="0.85", label="unassigned / unknown", ms=4))
     fig.legend(handles=handles, loc="lower center", ncol=6, fontsize=6, frameon=False)
     fig.suptitle(f"{ds}, test sample {sample}: manual gates vs model assignments (seed 0)", fontsize=9)
@@ -208,10 +210,11 @@ if __name__ == "__main__":
     print((RES / "results_table.md").read_text())
     for ds in ["Samusik_all", "Levine_32dim"]:
         per_pop_figure(df, ds, ["R_rules_classifier", "L0_gmm", "L1_t", "L2_flowsom", "L3_order", "L4_rules",
-                                "L4_both", "L5_both_ref1", "L5_both_ref3", "L5_neither_ref3", "L6_both"])
-    calibration_figure(df, ["R_rules_classifier", "L3_order", "L4_both", "L5_both_ref3", "L5_neither_ref3", "L6_both"])
+                                "L4_both", "L5_both_ref1", "L5_both_ref3", "L5_neither_ref3", "L6_both",
+                                "L6_both_marginal", "X_marg_both_ref3"])
+    calibration_figure(df, ["R_rules_classifier", "L3_order", "L4_both", "L5_both_ref3", "L5_neither_ref3", "L6_both", "L6_both_marginal"])
     gates_vs_model_figure("Samusik_all", "06", [("CD11b", "Ly6C"), ("CD19", "CD3"), ("Sca1", "cKit")],
-                          ["R_rules_classifier", "L1_t", "L4_both", "L5_both_ref3", "L6_both"])
+                          ["R_rules_classifier", "L1_t", "L4_both", "L5_both_ref3", "L6_both_marginal"])
     gates_vs_model_figure("Levine_32dim", "H2", [("CD3", "CD19"), ("CD34", "CD38")],
-                          ["R_rules_classifier", "L1_t", "L4_both", "L5_both_ref1", "L6_both"])
+                          ["R_rules_classifier", "L1_t", "L4_both", "L5_both_ref1", "L6_both_marginal"])
     print(json.dumps(empirical_violations(), indent=1)[:3000])
